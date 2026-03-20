@@ -1,0 +1,26 @@
+
+--- Evaluating Baseline (Isolation Forest) ---
+Model loaded from C:\Users\HP\Documents\Anitgravity final\UBA ITD\models/baseline\isolation_forest.joblib
+Score Stats: Mean=0.1463, Std=0.0571
+Dynamic Threshold (Mean - 2*Std): 0.0321
+Ground Truth Anomalies: 76
+Detected Anomalies: 1360
+Precision: 0.0000
+Recall:    0.0000
+F1 Score:  0.0000
+
+--- Evaluating LSTM Autoencoder ---
+Loading Scaler...
+Creating Sequences...
+Sequences created: 18315
+Loading Model...
+Predicting...
+Calculating Metrics...
+Score Stats: Mean=0.1607, Std=0.1259
+Dynamic Threshold (Mean + 2*Std): 0.4125
+Ground Truth Anomalies: 76
+Detected Anomalies: 539
+Precision: 0.0000
+Recall:    0.0000
+F1 Score:  0.0000
+ROC AUC:   0.5492

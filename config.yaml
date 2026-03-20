@@ -1,0 +1,184 @@
+# Configuration file for UBA & Insider Threat Detection System
+# All thresholds, multipliers, and paths should be defined here
+
+# =============================================================================
+# PATHS
+# =============================================================================
+paths:
+  data_raw: "data/raw"
+  data_processed: "data/processed"
+  risk_output: "data/risk_output"
+  models_baseline: "models/baseline"
+  models_lstm: "models/lstm"
+
+# =============================================================================
+# DATA GENERATION
+# =============================================================================
+data_generation:
+  num_users: 100
+  days_to_simulate: 30
+  insider_threat_user: "U105"
+  insider_threat_start_day: 25
+
+  # Scenario definitions — used by training and evaluation pipelines
+  scenarios:
+    malicious_user: "U105"
+    malicious_start_day: "2024-01-20"
+
+# =============================================================================
+# FEATURE ENGINEERING
+# =============================================================================
+features:
+  # Window sizes for behavioral features
+  window_1h: 1          # hours
+  window_24h: 24        # hours
+  window_7d: 168        # hours (7 * 24)
+  
+  # After-hours definition
+  work_start_hour: 7
+  work_end_hour: 20
+
+# =============================================================================
+# ML MODELS - LSTM AUTOENCODER
+# =============================================================================
+lstm:
+  sequence_length: 10
+  hidden_dim: 32
+  num_layers: 2
+  batch_size: 64
+  epochs: 10
+  learning_rate: 0.001
+  dropout: 0.1
+
+# =============================================================================
+# ML MODELS - BASELINE
+# =============================================================================
+baseline:
+  model_type: "isolation_forest"  # or "ocsvm"
+  n_estimators: 100
+  contamination: 0.05
+  random_state: 42
+
+# =============================================================================
+# THRESHOLDING
+# =============================================================================
+thresholds:
+  # Statistical thresholding method: "percentile", "std", "iqr"
+  method: "percentile"
+  percentile: 99.5          # For percentile method
+  std_multiplier: 3.0       # For std method (mean + N*std)
+  iqr_multiplier: 1.5       # For IQR method
+  
+  # Fixed thresholds (used if statistical not available)
+  lstm_anomaly_mean: 0.16
+  lstm_anomaly_std: 0.12
+
+# =============================================================================
+# RISK SCORING
+# =============================================================================
+risk_scoring:
+  # Base score mapping
+  base_multiplier: 250
+  max_risk: 100
+  
+  # Role multipliers
+  role_multipliers:
+    Admin: 1.5
+    Contractor: 1.2
+    Employee: 1.0
+  
+  # Time multipliers
+  after_hours_multiplier: 1.5
+  
+  # Activity multipliers
+  activity_multipliers:
+    "File Copy": 4.0
+    "Connect": 3.0      # USB
+    "File Delete": 2.0
+    "File Write": 1.5
+    default: 1.0
+  
+  # Risk decay
+  decay_rate: 0.9       # per day
+  
+  # Aggregation weights
+  max_weight: 1.0
+  sum_weight: 0.1
+
+# =============================================================================
+# ALERTING
+# =============================================================================
+alerting:
+  # Thresholds for alert generation
+  medium_threshold: 70
+  high_threshold: 85
+  critical_threshold: 95
+  
+  # Alert persistence (number of events before alerting)
+  persistence_count: 2
+  
+  # Cooldown period (hours)
+  cooldown_hours: 24
+
+# =============================================================================
+# USER BASELINE DRIFT
+# =============================================================================
+baseline_drift:
+  # Rolling window for user baseline (days)
+  baseline_window_days: 14
+  
+  # Standard deviation multiplier for drift detection
+  drift_sigma: 2.0
+
+# =============================================================================
+# MITRE ATT&CK MAPPING
+# =============================================================================
+mitre_mapping:
+  # Activity -> MITRE Tactic/Technique
+  "File Copy":
+    tactic: "TA0010"
+    tactic_name: "Exfiltration"
+    technique: "T1052"
+    technique_name: "Exfiltration Over Physical Medium"
+  "Connect":
+    tactic: "TA0010"
+    tactic_name: "Exfiltration"
+    technique: "T1200"
+    technique_name: "Hardware Additions"
+  "Logon":
+    tactic: "TA0001"
+    tactic_name: "Initial Access"
+    technique: "T1078"
+    technique_name: "Valid Accounts"
+  "After Hours Logon":
+    tactic: "TA0006"
+    tactic_name: "Credential Access"
+    technique: "T1078"
+    technique_name: "Valid Accounts"
+  "File Delete":
+    tactic: "TA0040"
+    tactic_name: "Impact"
+    technique: "T1485"
+    technique_name: "Data Destruction"
+
+# =============================================================================
+# API SETTINGS
+# =============================================================================
+api:
+  title: "UBA ITD API"
+  version: "2.0.0"
+  cors_origins:
+    - "http://localhost:5173"
+    - "http://localhost:5174"
+    - "http://localhost:3000"
+  
+  # Rate limiting
+  rate_limit_requests: 100
+  rate_limit_window_seconds: 60
+
+# =============================================================================
+# EVALUATION
+# =============================================================================
+evaluation:
+  ground_truth_user: "U105"
+  ground_truth_start_day: 25

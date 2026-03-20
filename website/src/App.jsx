@@ -1,0 +1,127 @@
+import { Routes, Route, NavLink, useLocation } from 'react-router-dom'
+import {
+    Shield,
+    LayoutDashboard,
+    Activity,
+    Users as UsersIcon,
+    AlertTriangle,
+    Search,
+    Settings as SettingsIcon,
+    Bell
+} from 'lucide-react'
+
+// Pages
+import Dashboard from './pages/Dashboard'
+import RiskHeatmap from './pages/RiskHeatmap'
+import Forensics from './pages/Forensics'
+import Alerts from './pages/Alerts'
+import Landing from './pages/Landing'
+import Users from './pages/Users'
+import Settings from './pages/Settings'
+import MatrixBackground from './components/MatrixBackground'
+import CustomCursor from './components/CustomCursor'
+import TypewriterText from './components/TypewriterText'
+import ToastSystem from './components/ToastSystem'
+import ErrorBoundary from './components/ErrorBoundary'
+
+function App() {
+    const location = useLocation()
+
+    const getPageTitle = () => {
+        switch (location.pathname) {
+            case '/': return 'Dashboard'
+            case '/landing': return 'Project Overview'
+            case '/heatmap': return 'Risk Heatmap'
+            case '/forensics': return 'Forensics'
+            case '/alerts': return 'Active Alerts'
+            default: return 'Dashboard'
+        }
+    }
+
+    return (
+        <>
+            <MatrixBackground />
+            <CustomCursor />
+            <ToastSystem />
+            <div className="app-layout">
+                {/* Sidebar */}
+                <aside className="sidebar">
+                    <div className="sidebar-header">
+                        <div className="sidebar-logo">
+                            <Shield />
+                            <h1 className="glitch" data-text="UBA ITD">UBA ITD</h1>
+                        </div>
+                    </div>
+
+                    <nav className="sidebar-nav">
+                        <div className="nav-section">
+                            <div className="nav-section-title">Overview</div>
+                            <NavLink to="/" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
+                                <LayoutDashboard />
+                                Dashboard
+                            </NavLink>
+                            <NavLink to="/heatmap" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
+                                <Activity />
+                                Risk Heatmap
+                            </NavLink>
+                        </div>
+
+                        <div className="nav-section">
+                            <div className="nav-section-title">Investigation</div>
+                            <NavLink to="/forensics" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
+                                <Search />
+                                Forensics
+                            </NavLink>
+                            <NavLink to="/alerts" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
+                                <AlertTriangle />
+                                Active Alerts
+                            </NavLink>
+                        </div>
+
+                        <div className="nav-section">
+                            <div className="nav-section-title">System</div>
+                            <NavLink to="/users" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
+                                <UsersIcon />
+                                Users
+                            </NavLink>
+                            <NavLink to="/settings" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
+                                <SettingsIcon />
+                                Settings
+                            </NavLink>
+                        </div>
+                    </nav>
+                </aside>
+
+                {/* Header */}
+                <header className="header">
+                    <h2 className="header-title">
+                        <TypewriterText text={getPageTitle()} key={location.pathname} />
+                    </h2>
+                    <div className="header-actions">
+                        <div className="live-indicator">LIVE</div>
+                        <button className="btn btn-secondary" style={{ padding: '8px' }}>
+                            <Bell size={18} />
+                        </button>
+                    </div>
+                </header>
+
+                {/* Main Content */}
+                <main className="main-content">
+                    <ErrorBoundary>
+                        <Routes>
+                            <Route path="/landing" element={<Landing />} />
+                            <Route path="/" element={<Dashboard />} />
+                            <Route path="/heatmap" element={<RiskHeatmap />} />
+                            <Route path="/forensics" element={<Forensics />} />
+                            <Route path="/alerts" element={<Alerts />} />
+                            <Route path="/users" element={<Users />} />
+                            <Route path="/settings" element={<Settings />} />
+                        </Routes>
+                    </ErrorBoundary>
+                </main>
+            </div>
+        </>
+    )
+}
+
+export default App
