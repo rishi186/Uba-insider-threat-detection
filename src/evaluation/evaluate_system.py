@@ -96,21 +96,39 @@ class SystemEvaluator:
     
     def calculate_precision_recall(self, events_df: pd.DataFrame) -> Dict:
         """
-        Calculate precision and recall using synthetic ground truth.
+        Calculate precision and recall using ground truth aligned with generator.
         
-        Ground truth assumption:
-        - True positives: High-risk events from U105 after day 25
-        - False positives: High-risk events from other users
-        - False negatives: Low-risk events from U105 after day 25 that should be threats
+        Ground truth:
+        - True positives: High-risk events from U105 on days with actual threat activity
+          (file_copy_count > 0 or to_removable_count > 0)
+        - False positives: High-risk events from other users OR U105 on non-threat days
+        - False negatives: Low-risk events from U105 on actual threat days
+        
+        Note: Generator uses `day > start_day` (strict), and skips weekends,
+        so we define ground truth by actual threat feature presence, not just day range.
         """
         start_date = events_df['date'].min()
-        events_df['day'] = (events_df['date'] - start_date).dt.days
+        events_df['day_num'] = (events_df['date'] - start_date).dt.days
         
-        # Define ground truth
-        threat_mask = (
-            (events_df['user'] == self.ground_truth_user) & 
-            (events_df['day'] >= self.ground_truth_start_day)
-        )
+        # Define ground truth: U105 events that ACTUALLY have threat signals
+        # This handles the weekend gap and the > vs >= alignment
+        has_threat_activity = False
+        if 'file_copy_count' in events_df.columns:
+            has_threat_activity = events_df['file_copy_count'] > 0
+        elif 'to_removable_count' in events_df.columns:
+            has_threat_activity = events_df['to_removable_count'] > 0
+        
+        # Fallback: use day range if threat features not available
+        if not has_threat_activity.any():
+            threat_mask = (
+                (events_df['user'] == self.ground_truth_user) & 
+                (events_df['day_num'] > self.ground_truth_start_day)
+            )
+        else:
+            threat_mask = (
+                (events_df['user'] == self.ground_truth_user) & 
+                has_threat_activity
+            )
         
         # Predictions
         predicted_positive = events_df['risk_score'] >= self.alert_threshold
@@ -260,7 +278,7 @@ class SystemEvaluator:
         else:
             report += "❌ **Detection Failed** - System did not flag threat user\n"
         
-        with open(output_path, 'w') as f:
+        with open(output_path, 'w', encoding='utf-8') as f:
             f.write(report)
         
         logger.info("Report saved to %s", output_path)
@@ -273,7 +291,7 @@ def run_evaluation() -> Dict:
     
     # Save JSON
     json_path = os.path.join(RISK_OUTPUT_DIR, "evaluation_results.json")
-    with open(json_path, 'w') as f:
+    with open(json_path, 'w', encoding='utf-8') as f:
         json.dump(results, f, indent=2, default=str)
     
     # Generate markdown report

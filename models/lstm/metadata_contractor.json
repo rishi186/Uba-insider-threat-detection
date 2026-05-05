@@ -1,13 +1,13 @@
 {
   "role": "Contractor",
-  "n_sequences": 137,
+  "n_sequences": 169,
   "n_features": 7,
-  "final_loss": 0.7193411588668823,
-  "threshold": 3.7149178981781006,
+  "final_loss": 0.7104146877924601,
+  "threshold": 3.035537004470825,
   "threshold_method": "percentile",
-  "error_mean": 0.71031653881073,
-  "error_std": 0.43378210067749023,
-  "error_p50": 0.6274067759513855,
-  "error_p95": 1.140379786491394,
-  "error_p99": 2.9613847732543945
+  "error_mean": 0.7097926139831543,
+  "error_std": 0.42476990818977356,
+  "error_p50": 0.595495343208313,
+  "error_p95": 1.69611656665802,
+  "error_p99": 2.2446181774139404
 }

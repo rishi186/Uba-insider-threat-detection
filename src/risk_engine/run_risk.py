@@ -1,14 +1,14 @@
 """
-Risk Pipeline — Role-Based LSTM Inference with Advanced Scoring.
+Risk Pipeline — Role-Based LSTM Inference with Model-Aware Scoring.
 
 Entry point for the complete risk scoring pipeline:
-  1. Load processed data with behavioral features
+  1. Load processed data with behavioral + threat features
   2. Run inference using role-specific LSTM models
-  3. Calculate risk scores with explainability
+  3. Calculate risk scores using model-aware thresholds + threat features
   4. Aggregate user risk with drift detection
   5. Generate alerts and save reports
 
-Consolidated from run_risk_v2.py as the canonical implementation.
+Consolidated as the canonical implementation.
 """
 
 import pandas as pd
@@ -56,8 +56,10 @@ class RoleBasedInference:
         self.metadata: Dict[str, Dict] = {}
         self.user_roles: Dict[str, str] = {}
 
+        # LSTM features — only the columns the LSTM was trained on
+        # The featured_timeline has: far, eds, iav, oaf, login_entropy, file_count, email_count
+        # (threat-discriminating columns are NOT fed to LSTM, they go to risk scoring)
         self.feature_cols = [
-            'day_of_week',
             'far', 'eds', 'iav', 'oaf',
             'login_entropy', 'file_count', 'email_count'
         ]
@@ -91,7 +93,7 @@ class RoleBasedInference:
                 if os.path.exists(scaler_path):
                     self.scalers[role] = joblib.load(scaler_path)
 
-                logger.info("Loaded model: %s", role)
+                logger.info("Loaded model: %s (n_features=%d)", role, n_features)
 
         if not self.models:
             logger.warning("No role-specific LSTM models found. Using fallback scoring.")
@@ -100,7 +102,9 @@ class RoleBasedInference:
         """Load user role metadata."""
         if os.path.exists(USERS_PATH):
             users_df = pd.read_csv(USERS_PATH)
-            self.user_roles = dict(zip(users_df['id'], users_df['role']))
+            # Support both 'id' and 'user' column names
+            id_col = 'id' if 'id' in users_df.columns else 'user'
+            self.user_roles = dict(zip(users_df[id_col], users_df['role']))
 
     def get_model_for_user(self, user: str) -> tuple:
         """Get the appropriate model for a user based on their role."""
@@ -127,10 +131,13 @@ class RoleBasedInference:
         available_cols = [c for c in self.feature_cols if c in df.columns]
 
         if not available_cols:
-            logger.warning("No feature columns found. Using basic hour/day_of_week features.")
-            df['hour'] = df['date'].dt.hour
-            df['day_of_week'] = df['date'].dt.dayofweek
-            available_cols = ['hour', 'day_of_week']
+            logger.warning("No feature columns found. Using basic features.")
+            if 'date' in df.columns:
+                df['hour'] = pd.to_datetime(df['date']).dt.hour if df['date'].dtype == object else df['date'].dt.hour
+                df['day_of_week'] = pd.to_datetime(df['date']).dt.dayofweek if df['date'].dtype == object else df['date'].dt.dayofweek
+            available_cols = [c for c in ['hour', 'day_of_week'] if c in df.columns]
+
+        logger.info("LSTM features: %s", available_cols)
 
         for user, group in df.groupby('user'):
             model, scaler, metadata = self.get_model_for_user(user)
@@ -139,8 +146,8 @@ class RoleBasedInference:
                 continue
 
             user_indices = group.index.tolist()
-            user_data = group.sort_values('date')
-            features = user_data[available_cols].values
+            user_data = group.sort_values('day' if 'day' in group.columns else 'date')
+            features = user_data[available_cols].values.astype(np.float32)
 
             if len(features) < self.seq_len:
                 continue
@@ -177,20 +184,17 @@ class RoleBasedInference:
 def run_risk_pipeline():
     """Run the complete risk scoring pipeline."""
     logger.info("=" * 60)
-    logger.info("UBA & ITD Risk Pipeline")
+    logger.info("UBA & ITD Risk Pipeline (Model-Aware)")
     logger.info("=" * 60)
 
     # 1. Load Data
     logger.info("[1/5] Loading data...")
     if os.path.exists(PROCESSED_DATA_PATH):
-        df = pl.read_parquet(PROCESSED_DATA_PATH).to_pandas()
-        logger.info("  Loaded featured data: %d events", len(df))
+        df = pd.read_parquet(PROCESSED_DATA_PATH)
+        logger.info("  Loaded featured data: %d rows, columns: %s", len(df), list(df.columns))
     elif os.path.exists(FALLBACK_DATA_PATH):
         df = pl.read_parquet(FALLBACK_DATA_PATH).to_pandas()
         logger.info("  Loaded fallback data: %d events", len(df))
-        df['hour'] = df['date'].dt.hour
-        df['day_of_week'] = df['date'].dt.dayofweek
-        df['is_after_hours'] = ((df['hour'] < 7) | (df['hour'] > 20)).astype(int)
     else:
         logger.error("No processed data found!")
         return
@@ -201,15 +205,40 @@ def run_risk_pipeline():
     elif 'date' in df.columns:
         df['date'] = pd.to_datetime(df['date'])
 
+    # Add day_of_week if not present (needed for LSTM features)
+    if 'day_of_week' not in df.columns:
+        df['day_of_week'] = df['date'].dt.dayofweek
+
     # 2. Run LSTM Inference
     logger.info("[2/5] Running role-based LSTM inference...")
     inference = RoleBasedInference()
     anomaly_scores = inference.calculate_anomaly_scores(df)
     df['lstm_score'] = anomaly_scores
-    logger.info("  Anomaly scores calculated. Non-zero: %d", (anomaly_scores > 0).sum())
+    
+    nonzero = (anomaly_scores > 0).sum()
+    if nonzero > 0:
+        nz_scores = anomaly_scores[anomaly_scores > 0]
+        logger.info("  Anomaly scores: %d non-zero, mean=%.4f, max=%.4f",
+                     nonzero, nz_scores.mean(), nz_scores.max())
+    else:
+        logger.info("  Anomaly scores: all zero (no LSTM model loaded?)")
+
+    # 2.5 Load Biometric Scores (if available)
+    biometric_path = os.path.join(OUTPUT_DIR, "biometric_scores.csv")
+    if os.path.exists(biometric_path):
+        logger.info("[2.5/5] Loading batch mouse biometric scores...")
+        bio_df = pd.read_csv(biometric_path)
+        bio_df['date_str'] = pd.to_datetime(bio_df['date']).dt.date.astype(str)
+        df['date_str'] = df['date'].dt.date.astype(str)
+        
+        # Merge on user and date
+        df = df.merge(bio_df[['user', 'date_str', 'biometric_z_score']], on=['user', 'date_str'], how='left')
+        df['biometric_z_score'] = df['biometric_z_score'].fillna(0.0)
+    else:
+        df['biometric_z_score'] = 0.0
 
     # 3. Calculate Risk Scores
-    logger.info("[3/5] Calculating risk scores with explainability...")
+    logger.info("[3/5] Calculating risk scores with model-aware thresholds...")
     risk_engine.load_user_metadata(USERS_PATH)
 
     risk_scores = []
@@ -219,7 +248,17 @@ def run_risk_pipeline():
     alert_severities = []
 
     for idx, row in df.iterrows():
-        risk, explanation = risk_engine.calculate_risk_score(row, anomaly_scores[idx])
+        lstm_score = row['lstm_score']
+        risk, explanation = risk_engine.calculate_risk_score(row, lstm_score)
+        
+        # Apply Edge Computing Biometrics multiplier
+        bio_score = row.get('biometric_z_score', 0.0)
+        if bio_score > 1.5:
+            risk = min(100.0, risk * 3.0) 
+            explanation.text_explanation += f" | BIOMETRIC IMPOSTER ALERT (z={bio_score:.2f})"
+            if "Account Takeover" not in explanation.mitre_tactic:
+                explanation.mitre_tactic += ", Account Takeover"
+
         risk_scores.append(risk)
         explanations.append(explanation.text_explanation)
         mitre_tactics.append(explanation.mitre_tactic)
@@ -239,15 +278,21 @@ def run_risk_pipeline():
 
     high_risk_count = (df['risk_score'] > 50).sum()
     alert_count = df['should_alert'].sum()
-    logger.info("  High-risk events (>50): %d", high_risk_count)
+    logger.info("  High-risk events (>50): %d / %d (%.1f%%)",
+                high_risk_count, len(df), high_risk_count / len(df) * 100)
     logger.info("  Alerts generated: %d", alert_count)
+
+    # Risk score distribution
+    logger.info("  Risk distribution: mean=%.1f, median=%.1f, P95=%.1f, P99=%.1f",
+                df['risk_score'].mean(), df['risk_score'].median(),
+                df['risk_score'].quantile(0.95), df['risk_score'].quantile(0.99))
 
     # 4. Aggregate User Risk
     logger.info("[4/5] Aggregating user risk with drift detection...")
     user_risk_df = risk_aggregator.aggregate_all_users(df)
 
     drift_users = user_risk_df[user_risk_df['is_drift'] == True]
-    logger.info("  Users with behavioral drift: %d", len(drift_users))
+    logger.info("  Users with behavioral drift: %d / %d", len(drift_users), len(user_risk_df))
 
     # 5. Save Reports
     logger.info("[5/5] Saving reports...")
@@ -274,14 +319,28 @@ def run_risk_pipeline():
     logger.info("SUMMARY")
     logger.info("  Total Events: %d", len(df))
     logger.info("  Total Users: %d", len(user_risk_df))
-    logger.info("  High-Risk Events: %d", high_risk_count)
+    logger.info("  High-Risk Events: %d (%.1f%%)", high_risk_count, high_risk_count / len(df) * 100)
     logger.info("  Alerts Generated: %d", alert_count)
+
+    # Check threat user ranking
+    threat_user = config.get('data_generation', {}).get('insider_threat_user', 'U105')
+    threat_row = user_risk_df[user_risk_df['user'] == threat_user]
+    if not threat_row.empty:
+        rank = user_risk_df.index.get_loc(threat_row.index[0]) + 1
+        logger.info("  Threat User %s: Rank %d/%d, Score %.1f",
+                     threat_user, rank, len(user_risk_df),
+                     threat_row.iloc[0]['total_risk_score'])
+
     logger.info("  Top 5 Risky Users:")
     for _, row in user_risk_df.head(5).iterrows():
         drift_marker = " [DRIFT]" if row['is_drift'] else ""
         logger.info("    %s: %.1f%s", row['user'], row['total_risk_score'], drift_marker)
 
     return df, user_risk_df
+
+
+# Backward compatibility aliases
+run_risk_pipeline_v2 = run_risk_pipeline
 
 
 if __name__ == "__main__":

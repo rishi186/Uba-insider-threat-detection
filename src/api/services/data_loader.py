@@ -81,12 +81,32 @@ class DataLoader:
             return None
 
     # ── User Risk ────────────────────────────────────────────────────────────
-    def get_users_risk_data(self, limit: int = 50, sort_desc: bool = True) -> List[dict]:
+    def get_users_risk_data(self, limit: int = 500, sort_desc: bool = True) -> List[dict]:
         df = self._load_csv("risk_report_users.csv")
         if df is None or df.empty:
             return []
 
-        df = df.fillna({"total_risk_score": 0.0, "user": "Unknown"})
+        df = df.fillna({
+            "total_risk_score": 0.0,
+            "user": "Unknown",
+            "role": "Employee",
+            "department": "General",
+            "location": "Unknown",
+            "risk_level": "Low",
+            "anomaly_score": 0.0,
+            "deviation_sigma": 0.0,
+            "after_hours_logins": 0,
+            "file_copies": 0,
+            "usb_events": 0,
+            "confidential_files": 0,
+            "suspicious_urls": 0,
+            "external_emails": 0,
+            "large_emails": 0,
+            "failed_logins": 0,
+            "event_count": 0,
+            "mitre_tactics": "",
+            "last_active": "",
+        })
 
         if "total_risk_score" in df.columns:
             df = df.sort_values(by="total_risk_score", ascending=not sort_desc)

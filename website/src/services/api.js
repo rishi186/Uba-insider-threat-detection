@@ -98,7 +98,7 @@ export const fetchRiskyEvents = async (limit = 100, minScore = 0) => {
 };
 
 /** GET /api/users/risk — Sorted risky-user list. */
-export const fetchRiskyUsers = async (limit = 50, sort = 'desc') => {
+export const fetchRiskyUsers = async (limit = 500, sort = 'desc') => {
     try {
         const params = new URLSearchParams({ limit, sort });
         return await apiFetch(`/users/risk?${params}`);

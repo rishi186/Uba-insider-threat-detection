@@ -17,13 +17,15 @@ class TestRiskEngine:
             'user': 'U999',
             'date': pd.Timestamp('2024-01-01 23:00:00'),
             'source': 'File',
-            'activity': 'File Copy'
+            'activity': 'File Copy',
+            'file_copy_count': 20,
+            'oaf': 1.0
         }
         # Inject Admin role
         engine.user_roles['U999'] = 'Admin'
         
         # High anomaly score — returns (score, explanation) tuple
-        risk, explanation = engine.calculate_risk_score(row, anomaly_score=0.8, model_type='lstm')
+        risk, explanation = engine.calculate_risk_score(row, anomaly_score=10.0, model_type='lstm')
         
         # Expect high risk — capped at max_risk (100)
         assert risk == 100

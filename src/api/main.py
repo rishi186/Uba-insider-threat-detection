@@ -24,7 +24,7 @@ import uuid
 import os
 
 from src.api.config import settings
-from src.api.routers import users, events, stats, analysis, timeline, alerts, models
+from src.api.routers import users, events, stats, analysis, timeline, alerts, models, telemetry, mouse_tracking, auth, websockets
 
 # =============================================================================
 # LOGGING SETUP
@@ -144,6 +144,7 @@ TAGS_METADATA = [
     {"name": "Timeline", "description": "Chronological event timeline per user"},
     {"name": "Alerts", "description": "Security alerts with severity filtering and pagination"},
     {"name": "Models", "description": "ML model health and metadata"},
+    {"name": "Mouse Tracking", "description": "Real-time mouse biometric tracking and anomaly detection"},
     {"name": "Admin", "description": "Administrative operations (cache, config)"},
 ]
 
@@ -313,6 +314,10 @@ app.include_router(analysis.router, prefix="/api", tags=["Analysis"])
 app.include_router(timeline.router, prefix="/api", tags=["Timeline"])
 app.include_router(alerts.router, prefix="/api", tags=["Alerts"])
 app.include_router(models.router, prefix="/api", tags=["Models"])
+app.include_router(telemetry.router, prefix="/api/telemetry", tags=["Telemetry"])
+app.include_router(mouse_tracking.router, prefix="/api/mouse", tags=["Mouse Tracking"])
+app.include_router(auth.router, prefix="/api/auth", tags=["Authentication"])
+app.include_router(websockets.router, prefix="/api/ws", tags=["WebSockets"])
 
 
 # =============================================================================

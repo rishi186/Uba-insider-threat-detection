@@ -3,6 +3,10 @@ venv/
 .venv/
 env/
 .env/
+.env
+
+# Node
+node_modules/
 
 # Python cache
 __pycache__/

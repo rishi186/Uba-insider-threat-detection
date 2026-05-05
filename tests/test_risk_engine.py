@@ -78,50 +78,50 @@ class TestRiskScoring:
 
     def test_high_anomaly_caps_at_100(self, engine):
         """Extreme anomaly score → capped at max_risk (100)."""
-        row = _make_row(user='U101', hour=23, activity='File Copy')
-        score, _ = engine.calculate_risk_score(row, 1.0, 'lstm')
+        row = _make_row(user='U101', hour=23, activity='File Copy', file_copy_count=20, oaf=1.0)
+        score, _ = engine.calculate_risk_score(row, 10.0, 'lstm')
         assert score == 100
 
     def test_admin_role_multiplier(self, engine):
         """Admin gets higher score than Employee for same event."""
         base_row = _make_row(hour=10, activity='Logon')
 
-        emp_score, _ = engine.calculate_risk_score({**base_row, 'user': 'U100'}, 0.3)
-        admin_score, _ = engine.calculate_risk_score({**base_row, 'user': 'U101'}, 0.3)
+        emp_score, _ = engine.calculate_risk_score({**base_row, 'user': 'U100'}, 4.0)
+        admin_score, _ = engine.calculate_risk_score({**base_row, 'user': 'U101'}, 4.0)
 
         assert admin_score >= emp_score, "Admin should score equal or higher than Employee"
 
     def test_after_hours_multiplier(self, engine):
         """After-hours event gets higher score than daytime."""
-        day_row = _make_row(hour=10)
-        night_row = _make_row(hour=2)
+        day_row = _make_row(hour=10, oaf=0.0)
+        night_row = _make_row(hour=2, oaf=1.0)
 
-        day_score, _ = engine.calculate_risk_score(day_row, 0.3)
-        night_score, _ = engine.calculate_risk_score(night_row, 0.3)
+        day_score, _ = engine.calculate_risk_score(day_row, 4.0)
+        night_score, _ = engine.calculate_risk_score(night_row, 4.0)
 
         assert night_score >= day_score, "After-hours should score equal or higher"
 
     def test_after_hours_factor_in_explanation(self, engine):
         """After-hours triggers a factor in the explanation."""
-        row = _make_row(hour=3)
-        _, explanation = engine.calculate_risk_score(row, 0.4)
+        row = _make_row(hour=3, oaf=1.0)
+        _, explanation = engine.calculate_risk_score(row, 4.0)
         factor_texts = ' '.join(explanation.factors)
         assert 'After-hours' in factor_texts
 
     def test_file_copy_activity_multiplier(self, engine):
         """File Copy activity gets a multiplier boost."""
         normal_row = _make_row(activity='Logon')
-        copy_row = _make_row(activity='File Copy')
+        copy_row = _make_row(activity='File Copy', file_copy_count=10)
 
-        normal_score, _ = engine.calculate_risk_score(normal_row, 0.3)
-        copy_score, _ = engine.calculate_risk_score(copy_row, 0.3)
+        normal_score, _ = engine.calculate_risk_score(normal_row, 4.0)
+        copy_score, _ = engine.calculate_risk_score(copy_row, 4.0)
 
         assert copy_score >= normal_score
 
     def test_heuristic_override_file_copy_usb_afterhours(self, engine):
         """File Copy + USB + after-hours → at least 85."""
-        row = _make_row(hour=2, activity='File Copy', usb_events_7d=5)
-        score, explanation = engine.calculate_risk_score(row, 0.4)
+        row = _make_row(hour=2, activity='File Copy', file_copy_count=10, usb_events=5, oaf=1.0)
+        score, explanation = engine.calculate_risk_score(row, 4.0)
         assert score >= 85
         assert any('PATTERN' in f for f in explanation.factors)
 

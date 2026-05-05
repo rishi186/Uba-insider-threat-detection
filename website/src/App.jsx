@@ -7,7 +7,8 @@ import {
     AlertTriangle,
     Search,
     Settings as SettingsIcon,
-    Bell
+    Bell,
+    Mouse
 } from 'lucide-react'
 
 // Pages
@@ -18,14 +19,18 @@ import Alerts from './pages/Alerts'
 import Landing from './pages/Landing'
 import Users from './pages/Users'
 import Settings from './pages/Settings'
+import MouseTracking from './pages/MouseTracking'
 import MatrixBackground from './components/MatrixBackground'
 import CustomCursor from './components/CustomCursor'
 import TypewriterText from './components/TypewriterText'
 import ToastSystem from './components/ToastSystem'
 import ErrorBoundary from './components/ErrorBoundary'
+import RoleGuard from './components/RoleGuard'
+import { useRole } from './context/RoleContext'
 
 function App() {
     const location = useLocation()
+    const { role, setRole } = useRole()
 
     const getPageTitle = () => {
         switch (location.pathname) {
@@ -34,6 +39,7 @@ function App() {
             case '/heatmap': return 'Risk Heatmap'
             case '/forensics': return 'Forensics'
             case '/alerts': return 'Active Alerts'
+            case '/mouse-tracking': return 'Mouse Biometrics'
             default: return 'Dashboard'
         }
     }
@@ -76,6 +82,10 @@ function App() {
                                 <AlertTriangle />
                                 Active Alerts
                             </NavLink>
+                            <NavLink to="/mouse-tracking" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
+                                <Mouse />
+                                Mouse Biometrics
+                            </NavLink>
                         </div>
 
                         <div className="nav-section">
@@ -99,6 +109,21 @@ function App() {
                     </h2>
                     <div className="header-actions">
                         <div className="live-indicator">LIVE</div>
+                        
+                        {/* Role Switcher */}
+                        <div className="role-switcher" style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'var(--surface-color)', padding: '4px 8px', borderRadius: '4px', border: '1px solid var(--border-color)' }}>
+                            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>ROLE:</span>
+                            <select 
+                                value={role} 
+                                onChange={(e) => setRole(e.target.value)}
+                                style={{ background: 'transparent', color: 'var(--text-primary)', border: 'none', outline: 'none', fontSize: '0.8rem', cursor: 'pointer' }}
+                            >
+                                <option value="Admin">Admin</option>
+                                <option value="Analyst">Analyst</option>
+                                <option value="Viewer">Viewer</option>
+                            </select>
+                        </div>
+                        
                         <button className="btn btn-secondary" style={{ padding: '8px' }}>
                             <Bell size={18} />
                         </button>
@@ -113,9 +138,10 @@ function App() {
                             <Route path="/" element={<Dashboard />} />
                             <Route path="/heatmap" element={<RiskHeatmap />} />
                             <Route path="/forensics" element={<Forensics />} />
-                            <Route path="/alerts" element={<Alerts />} />
-                            <Route path="/users" element={<Users />} />
-                            <Route path="/settings" element={<Settings />} />
+                            <Route path="/alerts" element={<RoleGuard allowedRoles={['Admin', 'Analyst']}><Alerts /></RoleGuard>} />
+                            <Route path="/users" element={<RoleGuard allowedRoles={['Admin', 'Analyst']}><Users /></RoleGuard>} />
+                            <Route path="/settings" element={<RoleGuard allowedRoles={['Admin']}><Settings /></RoleGuard>} />
+                            <Route path="/mouse-tracking" element={<MouseTracking />} />
                         </Routes>
                     </ErrorBoundary>
                 </main>

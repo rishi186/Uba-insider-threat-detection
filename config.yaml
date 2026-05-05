@@ -15,7 +15,7 @@ paths:
 # DATA GENERATION
 # =============================================================================
 data_generation:
-  num_users: 100
+  num_users: 125
   days_to_simulate: 30
   insider_threat_user: "U105"
   insider_threat_start_day: 25
@@ -69,16 +69,16 @@ thresholds:
   std_multiplier: 3.0       # For std method (mean + N*std)
   iqr_multiplier: 1.5       # For IQR method
   
-  # Fixed thresholds (used if statistical not available)
-  lstm_anomaly_mean: 0.16
-  lstm_anomaly_std: 0.12
+  # Use trained model thresholds from metadata JSON files
+  # (replaces hardcoded lstm_anomaly_mean which was stale)
+  use_trained_thresholds: true
 
 # =============================================================================
 # RISK SCORING
 # =============================================================================
 risk_scoring:
-  # Base score mapping
-  base_multiplier: 250
+  # Base score mapping (model-aware: uses Z-score from trained model metadata)
+  base_multiplier: 20
   max_risk: 100
   
   # Role multipliers
@@ -119,6 +119,9 @@ alerting:
   
   # Cooldown period (hours)
   cooldown_hours: 24
+
+  # SIEM Webhook Integration
+  webhook_url: "http://localhost:9000/webhook"
 
 # =============================================================================
 # USER BASELINE DRIFT

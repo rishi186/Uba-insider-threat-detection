@@ -32,16 +32,41 @@ class AlertStatus(str, Enum):
 class UserRiskProfile(BaseModel):
     user: str = Field(..., description="Unique user identifier")
     total_risk_score: float = Field(..., ge=0, description="Aggregated risk score (0-100+)")
+    max_risk: Optional[float] = Field(None, description="Max single-event risk score")
     rank: Optional[int] = Field(None, ge=1, description="Risk ranking among all users")
     role: str = Field("Employee", description="Organisational role")
     department: str = Field("General", description="Department name")
+    location: Optional[str] = Field(None, description="Office location")
+    pc: Optional[str] = Field(None, description="Primary workstation")
     risk_level: str = Field("Low", description="Categorical risk level")
+    anomaly_score: Optional[float] = Field(None, description="Normalised anomaly score 0-1")
+    deviation_sigma: Optional[float] = Field(None, description="Z-score deviation from baseline")
+    is_drift: Optional[bool] = Field(None, description="Whether user is in behavioural drift")
+    drift_explanation: Optional[str] = Field(None, description="Human-readable drift explanation")
+    # Activity metrics
+    event_count: Optional[int] = Field(None, description="Total events recorded")
+    after_hours_logins: Optional[int] = Field(None, description="Login events outside work hours")
+    failed_logins: Optional[int] = Field(None, description="Failed login attempts")
+    avg_login_hour: Optional[float] = Field(None, description="Average login hour (0-23)")
+    avg_session_duration_hrs: Optional[float] = Field(None, description="Average session length in hours")
+    file_copies: Optional[int] = Field(None, description="File copy events")
+    usb_events: Optional[int] = Field(None, description="USB connect/disconnect events")
+    confidential_files: Optional[int] = Field(None, description="Confidential file accesses")
+    total_file_ops: Optional[int] = Field(None, description="Total file operations")
+    suspicious_urls: Optional[int] = Field(None, description="Suspicious URL visits")
+    total_http_requests: Optional[int] = Field(None, description="Total HTTP requests")
+    external_domains: Optional[int] = Field(None, description="Distinct external domains visited")
+    large_emails: Optional[int] = Field(None, description="Large email sends (>500KB)")
+    external_emails: Optional[int] = Field(None, description="Emails sent to external addresses")
+    mitre_tactics: Optional[str] = Field(None, description="Pipe-separated MITRE tactic IDs")
+    last_active: Optional[str] = Field(None, description="Last activity date")
 
     model_config = {
         "json_schema_extra": {
             "examples": [{
-                "user": "U105", "total_risk_score": 87.5, "rank": 1,
-                "role": "Admin", "department": "Engineering", "risk_level": "Critical",
+                "user": "U105", "total_risk_score": 117.1, "rank": 1,
+                "role": "Employee", "department": "Engineering", "risk_level": "Critical",
+                "after_hours_logins": 5, "file_copies": 8, "usb_events": 8,
             }]
         }
     }

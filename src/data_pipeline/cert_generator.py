@@ -8,6 +8,7 @@ import sys
 
 # Add parent directory for potential imports
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+from utils.config import config
 
 # Initialize Faker
 fake = Faker()
@@ -16,8 +17,9 @@ np.random.seed(42)
 random.seed(42)
 
 # Configuration
-NUM_USERS = 50
-DAYS_TO_SIMULATE = 90  # 3 months for ~10k records
+data_gen_cfg = config.get('data_generation', {})
+NUM_USERS = data_gen_cfg.get('num_users', 125)
+DAYS_TO_SIMULATE = 90  # ~3 months
 START_DATE = datetime(2024, 1, 1)
 
 # Paths
@@ -35,9 +37,9 @@ def generate_users(num_users):
         role = np.random.choice(roles, p=[0.3, 0.2, 0.1, 0.25, 0.1, 0.05])
         
         # Assign risk profile (0 = Normal, 1 = Insider Threat)
-        # We'll make U105 and U120 malicious
+        # U105, U120 = original threats | U130 = Data Thief | U135 = The Spy
         is_malicious = False
-        if user_id in ["U105", "U120"]:
+        if user_id in ["U105", "U120", "U130", "U135"]:
             is_malicious = True
             
         users.append({
@@ -89,6 +91,16 @@ def generate_data(users_df):
                  if random.random() > 0.7:
                     login_time = current_date_base + timedelta(hours=3, minutes=random.randint(0, 59))
             
+            # Malicious Scenario — U130 "Data Thief": logs in at 1-3 AM after day 10
+            if is_malicious and uid == "U130" and day > 10:
+                if random.random() > 0.5:
+                    login_time = current_date_base + timedelta(hours=random.randint(1, 3), minutes=random.randint(0, 59))
+            
+            # Malicious Scenario — U135 "The Spy": 2-4 AM logins, gradual start day 15
+            if is_malicious and uid == "U135" and day > 15:
+                if random.random() > 0.4:
+                    login_time = current_date_base + timedelta(hours=random.randint(2, 4), minutes=random.randint(0, 59))
+            
             session_duration = 8 + random.gauss(0, 1) # ~8 hours
             logout_time = login_time + timedelta(hours=session_duration)
             
@@ -111,6 +123,30 @@ def generate_data(users_df):
                 # Bursts of File Copy -> USB (Device) late in the month
                 if is_malicious and uid == "U105" and day > 25 and random.random() > 0.5:
                      act_type = "Exfil"
+                
+                # ── U130 "Data Thief" Scenarios ──
+                # After day 10: mass file downloads + USB exfil at night
+                if is_malicious and uid == "U130" and day > 10:
+                    r = random.random()
+                    if r > 0.4:
+                        act_type = "Exfil"        # USB exfiltration bursts
+                    elif r > 0.25:
+                        act_type = "SuspiciousHTTP"  # proxy / IP-masking sites
+                    elif r > 0.15:
+                        act_type = "MassDownload"    # bulk file downloads
+                
+                # ── U135 "The Spy" Scenarios ──
+                # After day 15: gradual escalation — proxy sites, large emails, sensitive files
+                if is_malicious and uid == "U135" and day > 15:
+                    intensity = min((day - 15) / 30.0, 0.8)  # ramps up over time
+                    if random.random() < intensity:
+                        r = random.random()
+                        if r > 0.6:
+                            act_type = "SuspiciousHTTP"
+                        elif r > 0.3:
+                            act_type = "SpyEmail"       # large external emails
+                        else:
+                            act_type = "SensitiveFile"   # wrong-department files
                 
                 if act_type == "HTTP":
                     url = fake.url()
@@ -156,6 +192,74 @@ def generate_data(users_df):
                     
                     # 3. Disconnect
                     device_rows.append([f"D{event_id}", uid, current_time, pc, "Disconnect"])
+                    event_id += 1
+                
+                elif act_type == "SuspiciousHTTP":
+                    # IP masking / proxy / anonymizer sites
+                    suspicious_urls = [
+                        "https://hide-my-ip.com/proxy?session=" + fake.md5(),
+                        "https://anonymizer.nncovert.com/browse?url=" + fake.url(),
+                        "https://tor-gateway.darkweb.link/connect",
+                        "https://vpn-free-proxy.ru/mask/" + fake.ipv4(),
+                        "https://ip-spoofer.net/redirect?to=" + fake.url(),
+                        "https://pastebin.com/raw/" + fake.lexify(text="????????"),
+                        "https://mega.nz/file/" + fake.lexify(text="????????????"),
+                        "https://privnote.com/" + fake.lexify(text="???????????"),
+                        "https://temp-mail.org/inbox/" + fake.lexify(text="??????"),
+                    ]
+                    url = random.choice(suspicious_urls)
+                    http_rows.append([f"H{event_id}", uid, current_time, pc, url, "Suspicious browsing - proxy/anonymizer"])
+                    event_id += 1
+                
+                elif act_type == "MassDownload":
+                    # Bulk downloading sensitive-looking files
+                    sensitive_names = [
+                        "CONFIDENTIAL_financials_Q4.xlsx",
+                        "employee_salary_database.csv",
+                        "client_SSN_records.pdf",
+                        "merger_acquisition_plan.docx",
+                        "source_code_backup.tar.gz",
+                        "admin_passwords_vault.kdbx",
+                        "board_meeting_minutes_SECRET.pdf",
+                        "customer_credit_cards.csv",
+                        "trade_secrets_formula.docx",
+                        "HR_termination_list_2024.xlsx",
+                    ]
+                    for _ in range(random.randint(8, 25)):  # burst of downloads
+                        fname = random.choice(sensitive_names)
+                        file_rows.append([f"F{event_id}", uid, current_time, pc, fname, "Copy", True])
+                        event_id += 1
+                        current_time += timedelta(seconds=random.randint(2, 10))
+                
+                elif act_type == "SpyEmail":
+                    # Large emails to external/personal addresses
+                    external_targets = [
+                        f"{fake.user_name()}@protonmail.com",
+                        f"{fake.user_name()}@tutanota.com",
+                        f"drop.{fake.word()}@gmail.com",
+                        f"{fake.user_name()}@yandex.ru",
+                        f"anon.{fake.word()}@guerrillamail.com",
+                    ]
+                    to_addr = random.choice(external_targets)
+                    size = random.randint(500_000, 10_000_000)  # 500KB - 10MB
+                    attachments = random.randint(3, 10)
+                    email_rows.append([f"M{event_id}", uid, current_time, pc, to_addr, "Send", size, attachments])
+                    event_id += 1
+                
+                elif act_type == "SensitiveFile":
+                    # Accessing files outside their department / role
+                    wrong_dept_files = [
+                        "FINANCE_revenue_projections_2025.xlsx",
+                        "HR_employee_reviews_confidential.pdf",
+                        "LEGAL_pending_lawsuits.docx",
+                        "EXEC_board_strategy_deck.pptx",
+                        "IT_network_topology_INTERNAL.vsd",
+                        "RnD_patent_application_DRAFT.pdf",
+                        "SECURITY_incident_response_plan.docx",
+                        "CEO_personal_tax_returns.pdf",
+                    ]
+                    fname = random.choice(wrong_dept_files)
+                    file_rows.append([f"F{event_id}", uid, current_time, pc, fname, "Open", False])
                     event_id += 1
             
             # Finally Logoff

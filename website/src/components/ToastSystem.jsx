@@ -14,22 +14,33 @@ const ToastSystem = () => {
         setToasts(prev => prev.filter(t => t.id !== id));
     };
 
-    // Simulated Random Breaches
     useEffect(() => {
-        const timer = setInterval(() => {
-            if (Math.random() > 0.7) { // 30% chance every check
-                const threats = [
-                    { title: 'Suspicious IP', msg: 'Connection attempt from Blocked Region (CN)' },
-                    { title: 'Privilege Esc.', msg: 'User ADMIN_01 modified system root' },
-                    { title: 'Data Exfil', msg: 'Large outbound transfer detected (2GB)' },
-                    { title: 'Brute Force', msg: '15 failed login attempts on SSH' }
-                ];
-                const threat = threats[Math.floor(Math.random() * threats.length)];
-                addToast('critical', threat.title, threat.msg);
-            }
-        }, 8000); // Check every 8 seconds
+        const wsUrl = (import.meta.env.VITE_API_URL || 'http://localhost:8000').replace(/^http/, 'ws') + '/api/ws/streams';
+        const ws = new WebSocket(wsUrl);
 
-        return () => clearInterval(timer);
+        ws.onopen = () => console.log('ToastSystem: Connected to UBA WebSockets');
+        
+        ws.onmessage = (event) => {
+            try {
+                const msg = JSON.parse(event.data);
+                if (msg.type === 'new_alert') {
+                    const data = msg.data;
+                    addToast(
+                        data.severity === 'critical' ? 'critical' : 'warning',
+                        data.type || 'System Alert',
+                        `${data.user_id}: ${data.message}`
+                    );
+                }
+            } catch (err) {
+                console.error('WebSocket message parse error:', err);
+            }
+        };
+
+        ws.onclose = () => console.log('ToastSystem: WebSocket disconnected');
+
+        return () => {
+            ws.close();
+        };
     }, []);
 
     return (

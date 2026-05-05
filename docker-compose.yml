@@ -37,5 +37,5 @@ services:
       backend:
         condition: service_healthy
     environment:
-      - VITE_API_URL=http://backend:8000
+      - VITE_API_URL=http://localhost:8000
     restart: unless-stopped

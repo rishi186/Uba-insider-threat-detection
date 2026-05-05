@@ -28,7 +28,9 @@ def run_data_generation():
     print_header("STEP 1: DATA GENERATION")
     
     from data_pipeline.generator import generate_daily_logs
+    from data_pipeline.mouse_generator import generate_edge_telemetry
     generate_daily_logs()
+    generate_edge_telemetry()
 
 
 def run_normalization():
@@ -79,17 +81,12 @@ def run_risk_pipeline():
     print_header("STEP 5: RISK SCORING PIPELINE")
     
     try:
-        from risk_engine.run_risk_v2 import run_risk_pipeline_v2
-        run_risk_pipeline_v2()
+        from risk_engine.run_risk import run_risk_pipeline as _run_risk
+        _run_risk()
     except Exception as e:
-        print(f"Warning: Risk v2 failed: {e}")
-        print("Falling back to basic risk pipeline...")
-        
-        try:
-            from risk_engine.run_risk import run_risk_pipeline
-            run_risk_pipeline()
-        except Exception as e2:
-            print(f"Error: Basic risk pipeline also failed: {e2}")
+        print(f"Error: Risk pipeline failed: {e}")
+        import traceback
+        traceback.print_exc()
 
 
 def run_evaluation():

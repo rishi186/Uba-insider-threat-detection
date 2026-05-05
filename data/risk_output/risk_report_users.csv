@@ -1,101 +1,126 @@
-user,total_risk_score,max_risk,event_count,is_drift,deviation_sigma,drift_explanation
-U173,183.46875997991438,100.0,28,True,39.887579070968116,"Risk 183.5 exceeds baseline (avg=99.4, +39.9σ)"
-U112,179.26454620201213,100.0,26,True,79.26454620201213,Unusual activity (baseline avg=100.0)
-U153,175.39783196997644,100.0,26,True,75.39783196997644,Unusual activity (baseline avg=100.0)
-U150,175.11265216291213,100.0,26,True,75.11265216291213,Unusual activity (baseline avg=100.0)
-U143,172.25972600907642,100.0,25,True,72.25972600907642,Unusual activity (baseline avg=100.0)
-U111,170.75877965610644,100.0,24,True,70.75877965610644,Unusual activity (baseline avg=100.0)
-U134,167.268736005432,100.0,24,True,4.902602416120843,"Risk 167.3 exceeds baseline (avg=94.9, +4.9σ)"
-U155,165.11265216291213,100.0,25,True,65.11265216291213,Unusual activity (baseline avg=100.0)
-U162,163.89688561700643,100.0,24,True,63.89688561700643,Unusual activity (baseline avg=100.0)
-U167,163.4754925549821,100.0,25,True,63.47549255498211,Unusual activity (baseline avg=100.0)
-U135,163.4754925549821,100.0,25,True,63.47549255498211,Unusual activity (baseline avg=100.0)
-U114,162.9396769003527,100.0,24,True,3.5072310223616854,"Risk 162.9 exceeds baseline (avg=86.5, +3.5σ)"
-U188,162.25972600907642,100.0,24,True,62.25972600907642,Unusual activity (baseline avg=100.0)
-U123,162.25972600907642,100.0,24,True,62.25972600907642,Unusual activity (baseline avg=100.0)
-U104,161.97454620201214,100.0,24,True,61.974546202012135,Unusual activity (baseline avg=100.0)
-U196,160.93124997289152,100.0,24,True,12.086012229724407,"Risk 160.9 exceeds baseline (avg=97.9, +12.1σ)"
-U169,160.76879615850254,100.0,24,True,14.983301461797799,"Risk 160.8 exceeds baseline (avg=98.7, +15.0σ)"
-U192,160.75877965610644,100.0,23,True,60.75877965610644,Unusual activity (baseline avg=100.0)
-U107,160.75877965610644,100.0,23,True,60.75877965610644,Unusual activity (baseline avg=100.0)
-U101,160.75877965610644,100.0,23,True,60.75877965610644,Unusual activity (baseline avg=100.0)
-U189,160.75877965610644,100.0,23,True,60.75877965610644,Unusual activity (baseline avg=100.0)
-U152,160.75877965610644,100.0,23,True,60.75877965610644,Unusual activity (baseline avg=100.0)
-U172,160.75877965610644,100.0,23,True,60.75877965610644,Unusual activity (baseline avg=100.0)
-U171,160.75877965610644,100.0,23,True,60.75877965610644,Unusual activity (baseline avg=100.0)
-U174,160.75877965610644,100.0,23,True,60.75877965610644,Unusual activity (baseline avg=100.0)
-U194,160.75877965610644,100.0,23,True,60.75877965610644,Unusual activity (baseline avg=100.0)
-U193,160.6566014752014,100.0,23,True,31.414864819415477,"Risk 160.7 exceeds baseline (avg=99.5, +31.4σ)"
-U109,160.56143719243784,100.0,23,True,22.358014534191575,"Risk 160.6 exceeds baseline (avg=99.2, +22.4σ)"
-U182,159.9577496260456,100.0,23,True,13.772860195804432,"Risk 160.0 exceeds baseline (avg=97.4, +13.8σ)"
-U115,159.70411811825593,100.0,23,True,3.2466578942132673,"Risk 159.7 exceeds baseline (avg=94.4, +3.2σ)"
-U105,159.62384833384473,100.0,23,True,5.159194355652741,"Risk 159.6 exceeds baseline (avg=96.1, +5.2σ)"
-U145,159.44759867243286,100.0,23,True,5.8230746955900665,"Risk 159.4 exceeds baseline (avg=94.7, +5.8σ)"
-U168,159.2197977969567,100.0,24,True,2.1553755440018154,"Risk 159.2 exceeds baseline (avg=86.2, +2.2σ)"
-U121,159.1426834497498,100.0,23,True,5.029027247649014,"Risk 159.1 exceeds baseline (avg=93.3, +5.0σ)"
-U180,159.12434055454244,100.0,24,True,6.254573634884203,"Risk 159.1 exceeds baseline (avg=95.6, +6.3σ)"
-U124,159.02501789493132,100.0,23,True,5.832253331268065,"Risk 159.0 exceeds baseline (avg=96.1, +5.8σ)"
-U199,158.78654579962657,100.0,23,True,4.326659116519146,"Risk 158.8 exceeds baseline (avg=91.8, +4.3σ)"
-U126,158.5677368820848,100.0,23,True,11.21375478922034,"Risk 158.6 exceeds baseline (avg=98.2, +11.2σ)"
-U187,158.4089556320452,100.0,23,True,4.994276111409918,"Risk 158.4 exceeds baseline (avg=92.7, +5.0σ)"
-U191,158.3950487934644,100.0,23,True,7.1610069166152,"Risk 158.4 exceeds baseline (avg=96.9, +7.2σ)"
-U175,157.98117549580635,100.0,23,True,3.3700678292898294,"Risk 158.0 exceeds baseline (avg=88.7, +3.4σ)"
-U146,157.31982713717957,100.0,23,True,3.524229840655878,"Risk 157.3 exceeds baseline (avg=87.0, +3.5σ)"
-U164,157.259844257796,100.0,23,True,6.030610383237363,"Risk 157.3 exceeds baseline (avg=97.2, +6.0σ)"
-U130,157.03603758599778,100.0,23,True,5.642591272916429,"Risk 157.0 exceeds baseline (avg=97.0, +5.6σ)"
-U120,156.86831071402253,100.0,24,True,3.285958685126349,"Risk 156.9 exceeds baseline (avg=69.2, +3.3σ)"
-U117,156.78126180587344,100.0,23,True,5.2218128966268225,"Risk 156.8 exceeds baseline (avg=91.2, +5.2σ)"
-U183,156.52809610866188,100.0,23,True,9.503184859426396,"Risk 156.5 exceeds baseline (avg=95.9, +9.5σ)"
-U119,156.13724133348947,100.0,23,True,3.9146371777390905,"Risk 156.1 exceeds baseline (avg=89.8, +3.9σ)"
-U103,155.71557771972007,100.0,23,True,2.8403095143327115,"Risk 155.7 exceeds baseline (avg=87.9, +2.8σ)"
-U166,154.83976065994483,100.0,23,True,6.028231852472957,"Risk 154.8 exceeds baseline (avg=88.3, +6.0σ)"
-U185,154.75565099733348,100.0,23,True,6.015265109862249,"Risk 154.8 exceeds baseline (avg=90.3, +6.0σ)"
-U177,154.37902850939065,100.0,23,True,3.9171147085089766,"Risk 154.4 exceeds baseline (avg=82.1, +3.9σ)"
-U149,154.3602379228247,100.0,23,True,6.38885030144917,"Risk 154.4 exceeds baseline (avg=93.5, +6.4σ)"
-U151,154.3546772065057,100.0,23,True,5.990091643186048,"Risk 154.4 exceeds baseline (avg=92.8, +6.0σ)"
-U133,153.3419032235964,100.0,24,True,3.828773457514991,"Risk 153.3 exceeds baseline (avg=92.2, +3.8σ)"
-U161,152.06135501241656,100.0,24,True,3.2932632016982484,"Risk 152.1 exceeds baseline (avg=84.2, +3.3σ)"
-U125,151.69635855969915,100.0,23,True,5.036007812487294,"Risk 151.7 exceeds baseline (avg=90.7, +5.0σ)"
-U140,151.6539197760268,100.0,23,True,4.93323237233455,"Risk 151.7 exceeds baseline (avg=86.6, +4.9σ)"
-U138,151.10367833232425,100.0,23,True,4.140471012999236,"Risk 151.1 exceeds baseline (avg=91.1, +4.1σ)"
-U128,150.6036041387648,100.0,23,True,3.7738166671513818,"Risk 150.6 exceeds baseline (avg=90.7, +3.8σ)"
-U106,149.8988813733783,100.0,23,True,4.799989969719973,"Risk 149.9 exceeds baseline (avg=79.9, +4.8σ)"
-U157,149.83209184996917,100.0,23,True,6.558884910414881,"Risk 149.8 exceeds baseline (avg=82.8, +6.6σ)"
-U190,149.5386333104095,100.0,23,True,3.1404961455189646,"Risk 149.5 exceeds baseline (avg=85.1, +3.1σ)"
-U139,149.5302087855733,100.0,23,True,3.564233067689391,"Risk 149.5 exceeds baseline (avg=89.5, +3.6σ)"
-U156,149.46271907807252,100.0,23,True,4.257153845733159,"Risk 149.5 exceeds baseline (avg=73.5, +4.3σ)"
-U113,148.64683270594736,100.0,23,True,3.612710120412767,"Risk 148.6 exceeds baseline (avg=88.1, +3.6σ)"
-U116,148.20015457347222,100.0,23,True,3.1887127171976157,"Risk 148.2 exceeds baseline (avg=84.8, +3.2σ)"
-U198,147.65748890024773,100.0,23,True,4.466071423961857,"Risk 147.7 exceeds baseline (avg=82.7, +4.5σ)"
-U178,147.04813465045987,100.0,23,True,2.8962805315683093,"Risk 147.0 exceeds baseline (avg=69.9, +2.9σ)"
-U131,146.7821840327988,100.0,23,True,4.34405599890413,"Risk 146.8 exceeds baseline (avg=80.7, +4.3σ)"
-U137,146.50098779132995,100.0,23,True,2.3853353850824344,"Risk 146.5 exceeds baseline (avg=60.0, +2.4σ)"
-U141,146.40297334975347,100.0,23,True,3.1138517726505923,"Risk 146.4 exceeds baseline (avg=83.6, +3.1σ)"
-U110,146.36861829012588,100.0,23,True,5.253915439860089,"Risk 146.4 exceeds baseline (avg=80.2, +5.3σ)"
-U127,146.21923882104224,100.0,23,True,5.863945918261308,"Risk 146.2 exceeds baseline (avg=76.6, +5.9σ)"
-U195,145.53939339014136,100.0,23,True,2.3643321283565246,"Risk 145.5 exceeds baseline (avg=86.4, +2.4σ)"
-U197,145.13569186872527,100.0,23,True,3.812054909892498,"Risk 145.1 exceeds baseline (avg=75.7, +3.8σ)"
-U144,143.78337397695464,100.0,23,True,2.791085227159938,"Risk 143.8 exceeds baseline (avg=79.0, +2.8σ)"
-U181,143.7092808137944,100.0,23,True,3.083295888858924,"Risk 143.7 exceeds baseline (avg=63.7, +3.1σ)"
-U186,143.55878652893412,100.0,23,True,3.9196536691553274,"Risk 143.6 exceeds baseline (avg=78.7, +3.9σ)"
-U160,142.15781938139153,100.0,23,True,2.3629512700011253,"Risk 142.2 exceeds baseline (avg=81.7, +2.4σ)"
-U163,142.08246923017646,100.0,23,True,2.780648385956248,"Risk 142.1 exceeds baseline (avg=67.5, +2.8σ)"
-U159,139.36655283147263,100.0,23,True,2.6881312573736613,"Risk 139.4 exceeds baseline (avg=69.7, +2.7σ)"
-U100,139.3308921838887,96.13814815878865,23,True,4.562369851697527,"Risk 139.3 exceeds baseline (avg=66.8, +4.6σ)"
-U118,137.80212688978747,100.0,23,True,2.5806649634480183,"Risk 137.8 exceeds baseline (avg=74.5, +2.6σ)"
-U142,137.23607709513846,100.0,23,True,2.3326702240109918,"Risk 137.2 exceeds baseline (avg=73.2, +2.3σ)"
-U129,134.96509484735748,98.32944586873052,23,True,3.3873973415273166,"Risk 135.0 exceeds baseline (avg=65.6, +3.4σ)"
-U154,134.38147171719805,89.28727224469185,23,True,7.3973550355313575,"Risk 134.4 exceeds baseline (avg=74.7, +7.4σ)"
-U147,133.62235375164914,92.19098702073097,23,True,3.442716133686199,"Risk 133.6 exceeds baseline (avg=72.8, +3.4σ)"
-U102,131.93375203393657,100.0,23,True,3.3775307265690455,"Risk 131.9 exceeds baseline (avg=60.2, +3.4σ)"
-U158,125.45814735025766,100.0,23,False,1.814893525527941,Within 2.0σ of baseline
-U122,123.26812541401269,94.01798486709593,23,True,3.0423771308712024,"Risk 123.3 exceeds baseline (avg=57.6, +3.0σ)"
-U148,115.91908830066745,82.66826212406158,23,True,4.731724278573392,"Risk 115.9 exceeds baseline (avg=57.1, +4.7σ)"
-U132,115.77575307551295,91.69044211506844,23,True,3.14689515824685,"Risk 115.8 exceeds baseline (avg=24.6, +3.1σ)"
-U136,112.5780721858369,73.70295614004135,23,True,5.961984615396313,"Risk 112.6 exceeds baseline (avg=62.8, +6.0σ)"
-U170,107.72053429669587,77.0723582804203,23,True,3.3914670691570112,"Risk 107.7 exceeds baseline (avg=52.3, +3.4σ)"
-U179,107.30866170589951,87.75640144944191,23,True,2.0718792838706626,"Risk 107.3 exceeds baseline (avg=45.6, +2.1σ)"
-U108,83.40453777891557,72.5884535908699,23,True,2.329181677766256,"Risk 83.4 exceeds baseline (avg=26.9, +2.3σ)"
-U184,83.26508309239844,59.88694220781326,23,True,4.376013003229965,"Risk 83.3 exceeds baseline (avg=38.6, +4.4σ)"
-U165,81.33188040340306,57.59083718061447,23,True,5.483568943104228,"Risk 81.3 exceeds baseline (avg=40.8, +5.5σ)"
-U176,70.61900978510499,48.709774911403656,23,True,2.602244112138937,"Risk 70.6 exceeds baseline (avg=30.2, +2.6σ)"
+user,role,department,pc,location,total_risk_score,max_risk,event_count,risk_level,anomaly_score,deviation_sigma,is_drift,drift_explanation,avg_login_hour,avg_session_duration_hrs,failed_logins,after_hours_logins,total_file_ops,file_copies,usb_events,confidential_files,total_http_requests,suspicious_urls,external_domains,large_emails,external_emails,mitre_tactics,last_active
+U105,Employee,Corporate treasurer,PC-105,New York,117.1,100.0,23,Critical,1.0,2.938,True,"Risk 117.1 exceeds baseline (avg=14.3, +2.9σ)",3.6,6.8,3,5,86,8,8,15,130,2,4,6,4,TA0010-Exfiltration|TA0011-C2|TA0006-CredentialAccess|T1200-HardwareAdditions,2024-03-26
+U143,Contractor,Armed forces logistics/support,PC-143,San Francisco,70.74,68.81,24,High,0.7373,3.852,True,"Risk 70.7 exceeds baseline (avg=4.8, +3.9σ)",20.9,9.0,3,1,37,5,3,3,185,5,2,4,1,TA0010-Exfiltration|TA0011-C2|TA0006-CredentialAccess|T1200-HardwareAdditions,2024-03-27
+U188,Admin,"Geologist, wellsite",PC-188,San Francisco,59.44,41.89,24,High,0.573,1.864,False,Within 2.0σ of baseline,21.2,7.6,3,3,47,9,2,5,142,1,0,3,3,TA0010-Exfiltration|TA0011-C2|TA0006-CredentialAccess|T1200-HardwareAdditions,2024-03-30
+U123,Employee,English as a second language t,PC-123,London,43.86,36.43,24,Medium,0.4214,3.244,True,"Risk 43.9 exceeds baseline (avg=10.3, +3.2σ)",7.4,8.7,2,4,36,4,2,7,94,2,1,2,4,TA0010-Exfiltration|TA0011-C2|TA0006-CredentialAccess|T1200-HardwareAdditions,2024-03-28
+U176,Employee,"Development worker, community",PC-176,New York,22.93,19.46,23,Low,0.1974,3.17,True,"Risk 22.9 exceeds baseline (avg=3.2, +3.2σ)",7.2,6.8,1,2,61,2,2,1,113,1,1,1,1,TA0010-Exfiltration|TA0011-C2|TA0006-CredentialAccess|T1200-HardwareAdditions,2024-03-26
+U115,Employee,"Exhibitions officer, museum/ga",PC-115,Chicago,19.07,16.22,23,Low,0.1783,3.44,True,"Risk 19.1 exceeds baseline (avg=2.7, +3.4σ)",9.9,6.4,1,0,54,2,2,1,116,0,6,1,2,TA0010-Exfiltration|T1200-HardwareAdditions,2024-03-29
+U195,Employee,Occupational hygienist,PC-195,New York,18.31,17.87,23,Low,0.2356,2.979,True,"Risk 18.3 exceeds baseline (avg=2.2, +3.0σ)",10.5,5.3,1,0,82,1,0,1,93,0,0,0,0,TA0010-Exfiltration,2024-03-29
+U151,Employee,Water engineer,PC-151,San Francisco,15.31,14.53,24,Low,0.0884,2.884,True,"Risk 15.3 exceeds baseline (avg=2.5, +2.9σ)",8.0,8.1,0,0,65,4,1,2,151,1,2,3,0,TA0010-Exfiltration|TA0011-C2|T1200-HardwareAdditions,2024-03-26
+U129,Employee,"Pharmacist, hospital",PC-129,Seattle,14.1,12.93,23,Low,0.1021,3.955,True,"Risk 14.1 exceeds baseline (avg=0.9, +4.0σ)",6.6,8.1,1,1,47,1,0,0,72,0,0,1,2,TA0010-Exfiltration|TA0006-CredentialAccess,2024-03-30
+U224,Employee,Psychotherapist,PC-224,New York,4.57,4.47,23,Low,0.0304,3.043,True,"Risk 4.6 exceeds baseline (avg=0.5, +3.0σ)",4.9,6.5,0,0,11,1,0,0,134,0,0,0,0,TA0010-Exfiltration,2024-03-26
+U223,Employee,"Therapist, occupational",PC-223,San Francisco,1.32,1.26,24,Low,0.0226,3.791,True,"Risk 1.3 exceeds baseline (avg=0.1, +3.8σ)",9.8,8.2,0,0,46,0,0,0,147,0,0,0,2,,2024-03-27
+U219,Employee,"Therapist, occupational",PC-219,Chicago,0.74,0.71,23,Low,-0.0436,3.756,True,"Risk 0.7 exceeds baseline (avg=0.1, +3.8σ)",8.1,6.5,0,0,60,0,0,0,136,1,0,0,1,TA0011-C2,2024-03-27
+U104,Employee,Environmental health practitio,PC-104,Chicago,0.0,0.0,23,Low,-0.0229,0.0,False,Within expected range (low variance user),8.4,6.8,0,0,40,0,0,0,176,1,2,0,1,TA0011-C2,2024-03-26
+U112,Admin,Air traffic controller,PC-112,Austin,0.0,0.0,24,Low,-0.0254,0.0,False,Within expected range (low variance user),11.2,5.9,0,1,56,0,0,0,143,0,1,0,1,TA0006-CredentialAccess,2024-03-29
+U111,Contractor,Ambulance person,PC-111,Remote,0.0,0.0,26,Low,-0.0514,0.0,False,Within expected range (low variance user),7.3,8.0,0,0,20,0,0,0,101,0,1,0,2,,2024-03-30
+U114,Employee,Engineering geologist,PC-114,London,0.0,0.0,23,Low,0.0123,0.0,False,Within expected range (low variance user),9.0,8.5,0,0,85,0,0,0,127,0,0,0,1,,2024-03-28
+U113,Employee,Chief Financial Officer,PC-113,Austin,0.0,0.0,23,Low,0.0059,0.0,False,Within expected range (low variance user),8.8,8.6,0,0,85,0,0,0,96,0,2,1,2,,2024-03-28
+U117,Employee,Town planner,PC-117,San Francisco,0.0,0.0,23,Low,-0.0462,0.0,False,Within expected range (low variance user),6.3,7.0,0,0,44,0,0,0,126,0,4,0,0,,2024-03-28
+U118,Employee,Aid worker,PC-118,Remote,0.0,0.0,23,Low,0.066,0.0,False,Within expected range (low variance user),9.2,8.3,0,0,69,0,1,1,127,1,2,0,2,TA0011-C2|T1200-HardwareAdditions,2024-03-29
+U119,Employee,"Surveyor, mining",PC-119,New York,0.0,0.0,23,Low,-0.0145,0.0,False,Within expected range (low variance user),9.0,8.9,0,0,54,0,0,0,118,0,0,0,1,,2024-03-29
+U116,Employee,Risk analyst,PC-116,Chicago,0.0,0.0,23,Low,-0.0317,0.0,False,Within expected range (low variance user),6.8,6.0,0,1,49,0,0,0,96,0,1,1,1,TA0006-CredentialAccess,2024-03-29
+U120,Employee,"Engineer, civil (contracting)",PC-120,Austin,0.0,0.0,23,Low,0.0058,0.0,False,Within expected range (low variance user),9.2,9.9,0,0,55,0,0,0,163,0,0,0,2,,2024-03-26
+U121,Employee,Sports administrator,PC-121,Seattle,0.0,0.0,23,Low,-0.0141,0.0,False,Within expected range (low variance user),8.7,7.2,0,0,75,0,0,0,35,0,0,2,0,,2024-03-27
+U107,Admin,Sports administrator,PC-107,Remote,0.0,0.0,23,Low,-0.0736,0.0,False,Within expected range (low variance user),9.7,6.7,0,0,41,0,0,0,81,0,0,0,3,,2024-03-27
+U108,Employee,Chartered loss adjuster,PC-108,London,0.0,0.0,23,Low,0.0273,0.0,False,Within expected range (low variance user),7.5,7.8,0,0,54,0,0,0,79,0,0,0,2,,2024-03-27
+U109,Employee,Therapeutic radiographer,PC-109,Seattle,0.0,0.0,23,Low,-0.0777,0.0,False,Within expected range (low variance user),8.7,10.4,0,0,31,0,0,0,176,1,1,0,4,TA0011-C2,2024-03-30
+U106,Employee,"Civil engineer, consulting",PC-106,Chicago,0.0,0.0,23,Low,0.0006,0.0,False,Within expected range (low variance user),12.2,6.3,0,0,26,0,0,1,95,0,1,0,0,,2024-03-27
+U101,Contractor,Agricultural consultant,PC-101,Seattle,0.0,0.0,24,Low,0.0264,0.0,False,Within expected range (low variance user),13.1,8.3,0,0,39,0,0,0,155,0,1,0,0,,2024-03-26
+U102,Employee,Haematologist,PC-102,Remote,0.0,0.0,23,Low,0.0566,0.0,False,Within expected range (low variance user),11.5,8.6,0,0,40,0,0,0,136,0,0,0,2,,2024-03-29
+U128,Employee,"Designer, jewellery",PC-128,Remote,0.0,0.0,23,Low,0.0117,0.0,False,Within expected range (low variance user),8.4,8.2,0,0,73,0,0,0,143,0,0,0,0,,2024-03-29
+U127,Employee,Accounting technician,PC-127,Seattle,0.0,0.0,23,Low,0.0125,0.0,False,Within expected range (low variance user),8.1,7.5,0,0,47,0,0,0,86,0,1,1,0,,2024-03-30
+U126,Employee,Health physicist,PC-126,London,0.0,0.0,23,Low,0.0729,0.0,False,Within expected range (low variance user),8.0,9.2,0,0,78,0,0,0,120,0,0,1,0,,2024-03-28
+U131,Employee,Health physicist,PC-131,New York,0.0,0.0,23,Low,-0.0045,0.0,False,Within expected range (low variance user),9.7,7.7,0,0,42,0,0,0,99,0,1,0,1,,2024-03-29
+U133,Contractor,"Engineer, structural",PC-133,Remote,0.0,0.0,23,Low,-0.0681,0.0,False,Within expected range (low variance user),7.5,7.2,0,0,33,0,0,0,146,0,2,1,3,,2024-03-28
+U134,Contractor,Legal secretary,PC-134,New York,0.0,0.0,24,Low,-0.0331,0.0,False,Within expected range (low variance user),8.7,9.1,0,0,57,0,0,0,145,0,0,0,0,,2024-03-26
+U135,Admin,"Civil engineer, consulting",PC-135,Remote,0.0,0.0,24,Low,0.0048,0.0,False,Within expected range (low variance user),7.1,8.9,0,0,51,0,0,0,70,1,1,0,1,TA0011-C2,2024-03-26
+U130,Employee,"Librarian, public",PC-130,Chicago,0.0,0.0,23,Low,-0.0935,0.0,False,Within expected range (low variance user),8.4,6.5,0,0,46,0,0,0,148,0,3,0,0,,2024-03-29
+U136,Employee,Chief Executive Officer,PC-136,Chicago,0.0,0.0,23,Low,0.0076,0.0,False,Within expected range (low variance user),8.8,7.3,0,0,24,0,0,0,62,0,1,0,1,,2024-03-30
+U137,Employee,Museum/gallery conservator,PC-137,San Francisco,0.0,0.0,23,Low,0.0407,0.0,False,Within expected range (low variance user),10.6,8.8,0,0,65,0,0,0,151,0,1,0,1,,2024-03-26
+U139,Employee,Mechanical engineer,PC-139,Austin,0.0,0.0,23,Low,-0.0132,0.0,False,Within expected range (low variance user),11.5,7.4,0,1,29,0,0,0,86,0,0,0,1,TA0006-CredentialAccess,2024-03-26
+U138,Employee,Chief Strategy Officer,PC-138,London,0.0,0.0,23,Low,-0.0367,0.0,False,Within expected range (low variance user),10.3,8.7,0,0,25,0,1,0,101,1,1,0,0,TA0011-C2|T1200-HardwareAdditions,2024-03-26
+U140,Employee,Local government officer,PC-140,London,0.0,0.0,23,Low,0.0213,0.0,False,Within expected range (low variance user),8.3,7.9,0,0,37,0,0,0,109,0,0,1,1,,2024-03-29
+U141,Employee,Trade mark attorney,PC-141,Seattle,0.0,0.0,23,Low,-0.1094,0.0,False,Within expected range (low variance user),9.1,8.5,0,0,64,0,0,0,134,0,0,0,1,,2024-03-27
+U142,Employee,"Geneticist, molecular",PC-142,Seattle,0.0,0.0,23,Low,-0.0167,0.0,False,Within expected range (low variance user),9.2,8.6,0,0,56,0,0,0,101,0,1,0,0,,2024-03-27
+U132,Employee,"Designer, furniture",PC-132,San Francisco,0.0,0.0,23,Low,-0.0045,0.0,False,Within expected range (low variance user),8.2,9.1,0,0,56,0,0,0,115,0,2,0,1,,2024-03-29
+U144,Employee,Psychiatric nurse,PC-144,Chicago,0.0,0.0,23,Low,-0.0753,0.0,False,Within expected range (low variance user),7.1,7.4,0,0,61,0,0,0,160,0,1,0,0,,2024-03-26
+U145,Employee,Software engineer,PC-145,London,0.0,0.0,23,Low,0.0117,0.0,False,Within expected range (low variance user),7.8,7.6,0,0,74,0,0,0,77,0,2,0,0,,2024-03-28
+U147,Employee,Multimedia specialist,PC-147,San Francisco,0.0,0.0,23,Low,-0.0619,0.0,False,Within expected range (low variance user),11.1,5.8,0,0,36,0,0,1,112,0,1,0,0,,2024-03-27
+U146,Employee,Company secretary,PC-146,Remote,0.0,0.0,23,Low,-0.0448,0.0,False,Within expected range (low variance user),12.6,7.5,0,0,44,0,0,0,150,0,3,1,1,,2024-03-27
+U148,Employee,Careers information officer,PC-148,San Francisco,0.0,0.0,23,Low,-0.0716,0.0,False,Within expected range (low variance user),7.4,7.8,0,0,22,0,0,0,141,1,2,0,0,TA0011-C2,2024-03-29
+U149,Employee,Sub,PC-149,Remote,0.0,0.0,23,Low,0.0215,0.0,False,Within expected range (low variance user),9.2,7.6,0,1,36,0,0,0,126,0,1,1,0,TA0006-CredentialAccess,2024-03-28
+U150,Contractor,Hospital doctor,PC-150,Chicago,0.0,0.0,25,Low,-0.0288,0.0,False,Within expected range (low variance user),8.7,8.0,0,0,62,0,0,0,120,1,1,0,0,TA0011-C2,2024-03-29
+U152,Contractor,Medical illustrator,PC-152,New York,0.0,0.0,23,Low,0.0973,0.0,False,Within expected range (low variance user),8.9,7.2,0,0,72,0,0,0,92,0,1,0,0,,2024-03-28
+U153,Admin,Technical brewer,PC-153,Seattle,0.0,0.0,25,Low,0.0295,0.0,False,Within expected range (low variance user),9.1,6.1,0,0,38,0,0,0,145,0,1,0,2,,2024-03-30
+U154,Employee,"Engineer, agricultural",PC-154,San Francisco,0.0,0.0,23,Low,0.0368,0.0,False,Within expected range (low variance user),12.5,7.7,0,0,64,0,1,0,182,0,1,0,1,T1200-HardwareAdditions,2024-03-26
+U122,Employee,Personnel officer,PC-122,Chicago,0.0,0.0,24,Low,-0.0136,0.0,False,Within expected range (low variance user),9.7,6.5,0,0,77,0,0,0,192,0,0,0,1,,2024-03-30
+U124,Employee,"Production assistant, radio",PC-124,San Francisco,0.0,0.0,23,Low,0.0154,0.0,False,Within expected range (low variance user),9.4,6.9,0,0,68,0,0,0,71,0,0,0,1,,2024-03-28
+U125,Employee,Theme park manager,PC-125,San Francisco,0.0,0.0,23,Low,0.0051,0.0,False,Within expected range (low variance user),8.0,7.5,0,0,50,0,0,0,179,0,1,0,0,,2024-03-28
+U110,Employee,"Pharmacist, hospital",PC-110,London,0.0,0.0,23,Low,-0.0112,0.0,False,Within expected range (low variance user),9.5,6.5,0,0,55,0,0,0,124,0,1,0,0,,2024-03-30
+U103,Employee,Financial risk analyst,PC-103,Seattle,0.0,0.0,23,Low,0.08,0.0,False,Within expected range (low variance user),7.1,7.2,0,0,76,0,0,0,113,0,0,0,2,,2024-03-30
+U100,Employee,Clinical research associate,PC-100,London,0.0,0.0,23,Low,-0.0229,0.0,False,Within expected range (low variance user),6.4,7.9,0,0,57,0,0,0,88,0,0,0,1,,2024-03-26
+U160,Employee,"Exhibitions officer, museum/ga",PC-160,Chicago,0.0,0.0,23,Low,0.0037,0.0,False,Within expected range (low variance user),8.3,8.6,0,0,32,0,0,0,142,0,0,0,2,,2024-03-28
+U159,Employee,Cartographer,PC-159,Chicago,0.0,0.0,23,Low,0.0462,0.0,False,Within expected range (low variance user),8.1,8.2,0,0,30,0,0,0,138,1,3,0,0,TA0011-C2,2024-03-28
+U158,Employee,Horticultural consultant,PC-158,San Francisco,0.0,0.0,24,Low,0.0133,0.0,False,Within expected range (low variance user),11.1,10.1,0,0,31,0,0,0,104,1,0,0,1,TA0011-C2,2024-03-29
+U157,Employee,Estate agent,PC-157,Seattle,0.0,0.0,23,Low,-0.0169,0.0,False,Within expected range (low variance user),9.6,9.1,0,0,24,0,0,0,149,0,1,0,1,,2024-03-29
+U156,Employee,Armed forces technical officer,PC-156,New York,0.0,0.0,23,Low,0.0015,0.0,False,Within expected range (low variance user),9.9,5.3,0,0,58,0,0,0,137,0,0,0,0,,2024-03-28
+U155,Contractor,Building control surveyor,PC-155,Remote,0.0,0.0,24,Low,0.0403,0.0,False,Within expected range (low variance user),9.9,7.8,0,0,38,0,0,0,92,0,0,0,1,,2024-03-28
+U163,Employee,Health physicist,PC-163,San Francisco,0.0,0.0,23,Low,0.0028,0.0,False,Within expected range (low variance user),8.6,9.8,0,0,25,0,0,0,130,0,0,0,5,,2024-03-28
+U161,Employee,Chiropractor,PC-161,Remote,0.0,0.0,24,Low,0.0386,0.0,False,Within expected range (low variance user),8.7,8.1,0,0,63,0,0,0,127,1,0,0,0,TA0011-C2,2024-03-27
+U168,Employee,Marine scientist,PC-168,Seattle,0.0,0.0,23,Low,-0.0138,0.0,False,Within expected range (low variance user),9.8,10.5,0,0,75,0,0,0,153,0,4,0,1,,2024-03-29
+U169,Contractor,"Engineer, manufacturing system",PC-169,Chicago,0.0,0.0,26,Low,-0.0245,0.0,False,Within expected range (low variance user),10.0,7.8,0,0,45,0,0,0,88,0,1,0,1,,2024-03-29
+U171,Employee,Building surveyor,PC-171,Seattle,0.0,0.0,23,Low,-0.0383,0.0,False,Within expected range (low variance user),10.2,7.9,0,0,57,0,0,0,76,0,2,0,0,,2024-03-29
+U170,Employee,"Geologist, engineering",PC-170,Seattle,0.0,0.0,23,Low,0.0472,0.0,False,Within expected range (low variance user),9.1,5.4,0,0,90,0,0,0,104,0,0,0,2,,2024-03-26
+U165,Employee,Medical sales representative,PC-165,Seattle,0.0,0.0,23,Low,0.0245,0.0,False,Within expected range (low variance user),9.6,8.9,0,1,67,0,1,0,94,0,0,0,4,TA0006-CredentialAccess|T1200-HardwareAdditions,2024-03-30
+U166,Employee,"Designer, textile",PC-166,London,0.0,0.0,23,Low,-0.0303,0.0,False,Within expected range (low variance user),10.3,6.9,0,0,82,0,0,0,182,0,3,0,1,,2024-03-26
+U167,Admin,Metallurgist,PC-167,London,0.0,0.0,25,Low,0.0666,0.0,False,Within expected range (low variance user),7.1,6.5,0,2,72,0,0,0,153,0,1,0,0,TA0006-CredentialAccess,2024-03-27
+U162,Admin,Museum/gallery conservator,PC-162,Remote,0.0,0.0,25,Low,-0.0201,0.0,False,Within expected range (low variance user),10.7,6.6,0,0,54,0,0,0,137,0,0,0,4,,2024-03-28
+U175,Employee,Financial risk analyst,PC-175,Remote,0.0,0.0,23,Low,-0.0535,0.0,False,Within expected range (low variance user),8.0,8.5,0,0,49,0,0,0,142,0,1,0,0,,2024-03-29
+U177,Employee,"Psychologist, counselling",PC-177,New York,0.0,0.0,23,Low,-0.0092,0.0,False,Within expected range (low variance user),11.2,7.5,0,0,66,0,0,0,204,0,1,0,2,,2024-03-28
+U179,Employee,Geophysicist/field seismologis,PC-179,Chicago,0.0,0.0,23,Low,-0.031,0.0,False,Within expected range (low variance user),8.9,7.7,0,0,73,0,0,0,103,0,3,0,3,,2024-03-27
+U178,Employee,Museum education officer,PC-178,Chicago,0.0,0.0,23,Low,-0.0669,0.0,False,Within expected range (low variance user),8.2,7.5,0,0,51,0,0,0,142,0,1,0,0,,2024-03-26
+U181,Employee,English as a foreign language ,PC-181,London,0.0,0.0,23,Low,-0.0023,0.0,False,Within expected range (low variance user),7.5,7.6,0,0,40,0,0,0,84,0,2,0,1,,2024-03-26
+U182,Employee,"Journalist, broadcasting",PC-182,Seattle,0.0,0.0,23,Low,-0.0763,0.0,False,Within expected range (low variance user),9.4,7.1,0,1,74,0,0,0,144,0,0,1,0,TA0006-CredentialAccess,2024-03-27
+U183,Employee,Banker,PC-183,Seattle,0.0,0.0,23,Low,-0.077,0.0,False,Within expected range (low variance user),8.8,8.7,0,0,27,0,0,0,149,0,0,0,0,,2024-03-26
+U180,Admin,"Surveyor, hydrographic",PC-180,Remote,0.0,0.0,26,Low,-0.0262,0.0,False,Within expected range (low variance user),7.7,7.7,0,0,38,0,0,1,114,0,1,0,0,,2024-03-27
+U184,Employee,Estate manager/land agent,PC-184,Remote,0.0,0.0,23,Low,0.0346,0.0,False,Within expected range (low variance user),9.0,6.6,0,1,87,0,0,0,190,0,0,0,0,TA0006-CredentialAccess,2024-03-27
+U185,Employee,Ambulance person,PC-185,Seattle,0.0,0.0,23,Low,0.0316,0.0,False,Within expected range (low variance user),9.1,6.2,0,0,62,0,0,0,73,0,2,0,2,,2024-03-30
+U186,Employee,Interpreter,PC-186,San Francisco,0.0,0.0,23,Low,-0.0427,0.0,False,Within expected range (low variance user),11.9,8.1,0,0,27,0,0,0,140,0,4,0,1,,2024-03-29
+U187,Employee,Oncologist,PC-187,Remote,0.0,0.0,23,Low,0.0286,0.0,False,Within expected range (low variance user),11.1,4.9,0,0,44,0,0,0,172,0,1,0,1,,2024-03-29
+U172,Employee,Transport planner,PC-172,Seattle,0.0,0.0,23,Low,0.0018,0.0,False,Within expected range (low variance user),10.7,6.1,0,0,27,0,0,0,86,0,2,0,0,,2024-03-26
+U173,Admin,Dramatherapist,PC-173,New York,0.0,0.0,24,Low,0.0671,0.0,False,Within expected range (low variance user),9.4,6.9,0,0,40,0,0,0,178,0,0,0,1,,2024-03-27
+U174,Employee,"Social research officer, gover",PC-174,Austin,0.0,0.0,23,Low,0.0049,0.0,False,Within expected range (low variance user),10.4,7.4,0,0,52,0,0,0,124,0,0,0,1,,2024-03-27
+U164,Employee,Professor Emeritus,PC-164,New York,0.0,0.0,23,Low,-0.0047,0.0,False,Within expected range (low variance user),6.9,6.3,0,0,41,0,0,0,128,0,1,0,0,,2024-03-26
+U192,Employee,International aid/development ,PC-192,Austin,0.0,0.0,23,Low,-0.0511,0.0,False,Within expected range (low variance user),8.0,9.1,0,0,31,0,1,0,98,0,0,0,2,T1200-HardwareAdditions,2024-03-29
+U191,Employee,Tax adviser,PC-191,San Francisco,0.0,0.0,23,Low,0.0145,0.0,False,Within expected range (low variance user),6.5,7.8,0,0,38,0,0,0,146,1,0,0,1,TA0011-C2,2024-03-26
+U190,Employee,"Engineer, mining",PC-190,San Francisco,0.0,0.0,23,Low,0.0686,0.0,False,Within expected range (low variance user),10.1,9.1,0,0,49,0,0,0,173,1,2,0,2,TA0011-C2,2024-03-28
+U189,Employee,Brewing technologist,PC-189,New York,0.0,0.0,23,Low,-0.0217,0.0,False,Within expected range (low variance user),6.2,6.1,0,0,30,0,0,0,146,0,0,0,1,,2024-03-28
+U197,Employee,Customer service manager,PC-197,London,0.0,0.0,23,Low,-0.0756,0.0,False,Within expected range (low variance user),9.5,8.0,0,1,68,0,0,0,161,0,1,0,0,TA0006-CredentialAccess,2024-03-27
+U193,Employee,"Engineer, petroleum",PC-193,Remote,0.0,0.0,23,Low,0.0368,0.0,False,Within expected range (low variance user),11.5,6.3,0,0,98,0,0,0,143,0,0,0,2,,2024-03-29
+U194,Employee,Restaurant manager,PC-194,Remote,0.0,0.0,23,Low,-0.0127,0.0,False,Within expected range (low variance user),11.2,10.1,0,0,85,0,0,0,142,0,1,0,0,,2024-03-28
+U196,Employee,Proofreader,PC-196,Remote,0.0,0.0,23,Low,-0.0176,0.0,False,Within expected range (low variance user),10.1,9.6,0,0,79,0,0,0,98,0,2,0,2,,2024-03-28
+U201,Employee,"Surveyor, mining",PC-201,San Francisco,0.0,0.0,23,Low,0.0904,0.0,False,Within expected range (low variance user),9.5,6.9,0,0,41,0,0,0,93,0,0,0,1,,2024-03-30
+U202,Employee,Solicitor,PC-202,Seattle,0.0,0.0,23,Low,-0.0411,0.0,False,Within expected range (low variance user),7.9,6.5,0,3,38,0,0,0,146,1,1,0,1,TA0011-C2|TA0006-CredentialAccess,2024-03-26
+U203,Employee,General practice doctor,PC-203,Austin,0.0,0.0,23,Low,0.0746,0.0,False,Within expected range (low variance user),8.5,8.0,0,0,66,0,0,1,127,0,3,0,1,,2024-03-30
+U204,Contractor,Television/film/video producer,PC-204,Remote,0.0,0.0,25,Low,0.0222,0.0,False,Within expected range (low variance user),8.7,8.3,0,0,79,0,1,0,57,0,1,0,2,T1200-HardwareAdditions,2024-03-29
+U205,Employee,Phytotherapist,PC-205,Chicago,0.0,0.0,23,Low,-0.0593,0.0,False,Within expected range (low variance user),9.1,8.1,0,1,67,0,1,0,132,0,1,0,1,TA0006-CredentialAccess|T1200-HardwareAdditions,2024-03-30
+U198,Employee,Geochemist,PC-198,Seattle,0.0,0.0,23,Low,-0.0653,0.0,False,Within expected range (low variance user),9.7,7.6,0,0,58,0,0,0,119,0,1,0,0,,2024-03-29
+U199,Employee,Corporate treasurer,PC-199,London,0.0,0.0,23,Low,0.0518,0.0,False,Within expected range (low variance user),10.7,7.1,0,0,48,0,0,0,97,0,1,0,2,,2024-03-30
+U200,Employee,Fine artist,PC-200,Chicago,0.0,0.0,23,Low,-0.0346,0.0,False,Within expected range (low variance user),6.8,9.8,0,0,48,0,0,0,154,1,2,0,0,TA0011-C2,2024-03-30
+U208,Employee,Medical illustrator,PC-208,Chicago,0.0,0.0,23,Low,0.0178,0.0,False,Within expected range (low variance user),9.2,7.3,0,0,42,0,2,0,100,0,1,0,0,T1200-HardwareAdditions,2024-03-26
+U207,Employee,Oceanographer,PC-207,Chicago,0.0,0.0,23,Low,0.004,0.0,False,Within expected range (low variance user),5.6,7.6,0,0,8,0,0,0,141,0,1,0,3,,2024-03-30
+U206,Employee,Television production assistan,PC-206,San Francisco,0.0,0.0,23,Low,0.0312,0.0,False,Within expected range (low variance user),8.2,4.3,0,0,27,0,0,0,136,0,1,1,0,,2024-03-29
+U209,Employee,English as a foreign language ,PC-209,New York,0.0,0.0,23,Low,-0.0179,0.0,False,Within expected range (low variance user),8.3,8.6,0,0,29,0,0,0,161,0,1,0,1,,2024-03-27
+U213,Admin,"Chemist, analytical",PC-213,New York,0.0,0.0,25,Low,-0.0305,0.0,False,Within expected range (low variance user),9.2,8.2,0,0,41,0,0,0,84,0,0,0,0,,2024-03-29
+U210,Employee,Corporate investment banker,PC-210,Seattle,0.0,0.0,23,Low,-0.0389,0.0,False,Within expected range (low variance user),8.6,6.8,0,0,44,0,0,0,161,0,0,1,4,,2024-03-27
+U211,Employee,Sales executive,PC-211,Seattle,0.0,0.0,23,Low,-0.074,0.0,False,Within expected range (low variance user),10.0,8.7,0,1,48,0,1,1,192,0,0,0,1,TA0006-CredentialAccess|T1200-HardwareAdditions,2024-03-26
+U212,Contractor,"Research officer, political pa",PC-212,New York,0.0,0.0,24,Low,0.0344,0.0,False,Within expected range (low variance user),9.3,7.3,0,0,34,0,0,0,102,0,0,1,0,,2024-03-29
+U216,Admin,"Designer, ceramics/pottery",PC-216,London,0.0,0.0,25,Low,0.0829,0.0,False,Within expected range (low variance user),7.5,8.3,0,0,45,0,1,0,77,0,2,0,2,T1200-HardwareAdditions,2024-03-27
+U215,Admin,Clinical molecular geneticist,PC-215,San Francisco,0.0,0.0,24,Low,-0.0259,0.0,False,Within expected range (low variance user),8.9,6.0,0,0,18,0,0,0,155,0,1,0,0,,2024-03-29
+U214,Employee,Art gallery manager,PC-214,New York,0.0,0.0,23,Low,0.0553,0.0,False,Within expected range (low variance user),8.8,7.0,0,1,44,0,0,0,117,0,1,0,1,TA0006-CredentialAccess,2024-03-27
+U217,Employee,"Designer, jewellery",PC-217,New York,0.0,0.0,23,Low,0.0328,0.0,False,Within expected range (low variance user),9.2,7.3,0,0,42,0,0,0,207,0,0,0,1,,2024-03-28
+U220,Admin,Bonds trader,PC-220,San Francisco,0.0,0.0,24,Low,-0.0593,0.0,False,Within expected range (low variance user),7.0,5.7,0,0,27,0,0,0,162,1,1,0,3,TA0011-C2,2024-03-28
+U218,Admin,"Pharmacist, hospital",PC-218,London,0.0,0.0,26,Low,-0.0534,0.0,False,Within expected range (low variance user),7.6,7.0,0,0,64,0,0,0,54,0,0,0,2,,2024-03-30
+U222,Employee,Museum/gallery curator,PC-222,San Francisco,0.0,0.0,23,Low,0.0057,0.0,False,Within expected range (low variance user),11.9,7.8,0,0,61,0,0,0,92,0,1,0,0,,2024-03-28
+U221,Admin,Musician,PC-221,San Francisco,0.0,0.0,25,Low,-0.0237,0.0,False,Within expected range (low variance user),9.8,7.6,0,0,75,0,0,1,152,0,0,0,1,,2024-03-30

@@ -57,7 +57,12 @@ class Settings:
         _api_cfg.get("cors_origins", [
             "http://localhost:5173",
             "http://localhost:5174",
+            "http://localhost:5175",
             "http://localhost:3000",
+            "http://127.0.0.1:5173",
+            "http://127.0.0.1:5174",
+            "http://127.0.0.1:5175",
+            "http://127.0.0.1:3000",
         ]),
     )
 
@@ -77,7 +82,15 @@ class Settings:
     )
 
     # ── Logging ──────────────────────────────────────────────────────────────
+    # ── Logging ──────────────────────────────────────────────────────────────
     LOG_LEVEL: str = os.environ.get("UBA_LOG_LEVEL", "INFO")
+
+    # ── Webhooks ─────────────────────────────────────────────────────────────
+    _alert_cfg = yaml_config.alerting if yaml_config else {}
+    WEBHOOK_URL: str = os.environ.get(
+        "UBA_WEBHOOK_URL",
+        _alert_cfg.get("webhook_url", "")
+    )
 
 
 settings = Settings()

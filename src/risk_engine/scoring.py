@@ -1,28 +1,33 @@
 """
-Risk Scoring Engine — Config-Driven with Explainability & MITRE Mapping.
+Risk Scoring Engine — Model-Aware Thresholding with Explainability & MITRE Mapping.
 
 Features:
-  - Contextual risk scoring with config-driven multipliers
+  - Uses TRAINED model thresholds (from metadata JSON) instead of hardcoded values
+  - Z-score based anomaly detection: only flags events significantly above threshold
+  - Threat-discriminating feature multipliers (file_copy, USB, confidential files)
   - Alert logic with persistence and cooldown
-  - Explainability layer (why was this flagged?)
   - MITRE ATT&CK mapping
 
-Consolidated from scoring_v2.py as the canonical implementation.
+Consolidated as the canonical implementation.
 """
 
 import pandas as pd
 import numpy as np
 import logging
+import json
+import os
 from typing import Dict, List, Optional, Tuple
 from datetime import datetime, timedelta
 from dataclasses import dataclass
-import os
 import sys
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 from utils.config import config
 
 logger = logging.getLogger("uba.risk_engine.scoring")
+
+PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../"))
+MODEL_DIR = os.path.join(PROJECT_ROOT, "models/lstm")
 
 
 @dataclass
@@ -100,10 +105,11 @@ class AlertManager:
 
 class AdvancedRiskScoringEngine:
     """
-    Config-driven risk scoring with explainability and MITRE mapping.
+    Model-aware risk scoring with explainability and MITRE mapping.
 
-    All multipliers, thresholds, and work-hour definitions are read
-    from config.yaml at init time. No hardcoded business logic.
+    Uses trained model thresholds from metadata files to properly calibrate
+    anomaly detection. Only anomalies significantly above the trained P99.5
+    threshold generate meaningful risk scores.
     """
 
     def __init__(self):
@@ -116,7 +122,6 @@ class AdvancedRiskScoringEngine:
         })
         self.activity_multipliers = self.risk_config.get('activity_multipliers', {})
         self.after_hours_mult = self.risk_config.get('after_hours_multiplier', 1.5)
-        self.base_multiplier = self.risk_config.get('base_multiplier', 250)
         self.max_risk = self.risk_config.get('max_risk', 100)
 
         self.work_start = self.features_config.get('work_start_hour', 7)
@@ -126,10 +131,40 @@ class AdvancedRiskScoringEngine:
         self.user_roles: Dict[str, str] = {}
         self.alert_manager = AlertManager()
 
+        # Model-aware thresholds (loaded from metadata)
+        self.model_thresholds: Dict[str, Dict] = {}
+        self._load_model_thresholds()
+
         logger.info(
-            "RiskScoringEngine initialised — roles=%s, work_hours=%d-%d",
+            "RiskScoringEngine initialised — roles=%s, work_hours=%d-%d, model_thresholds=%s",
             list(self.role_multipliers.keys()), self.work_start, self.work_end,
+            list(self.model_thresholds.keys()),
         )
+
+    def _load_model_thresholds(self):
+        """Load trained model thresholds from metadata JSON files."""
+        for role in ['employee', 'admin', 'contractor', 'global']:
+            metadata_path = os.path.join(MODEL_DIR, f"metadata_{role}.json")
+            if os.path.exists(metadata_path):
+                with open(metadata_path, 'r') as f:
+                    self.model_thresholds[role] = json.load(f)
+                logger.info(
+                    "Loaded threshold for %s: mean=%.4f, std=%.4f, threshold=%.4f",
+                    role,
+                    self.model_thresholds[role].get('error_mean', 0),
+                    self.model_thresholds[role].get('error_std', 0),
+                    self.model_thresholds[role].get('threshold', 0),
+                )
+
+    def _get_threshold_for_user(self, user: str) -> Dict:
+        """Get the appropriate threshold metadata for a user based on role."""
+        role = self.user_roles.get(user, 'Employee').lower()
+        if role in self.model_thresholds:
+            return self.model_thresholds[role]
+        if 'global' in self.model_thresholds:
+            return self.model_thresholds['global']
+        # Fallback
+        return {'error_mean': 0.6, 'error_std': 0.6, 'threshold': 3.5}
 
     def load_user_metadata(self, users_path: str) -> None:
         """Load user role metadata from CSV."""
@@ -145,80 +180,90 @@ class AdvancedRiskScoringEngine:
         model_type: str = "lstm"
     ) -> Tuple[float, RiskExplanation]:
         """
-        Calculate risk score with full explainability.
+        Calculate risk score with model-aware thresholding and full explainability.
 
         Returns:
             Tuple of (risk_score, RiskExplanation)
         """
         factors = []
+        user = row.get('user', '')
 
-        # 1. Base Score Mapping
-        base_risk = self._calculate_base_risk(anomaly_score, model_type)
-        if base_risk > 10:
+        # ── 1. LSTM Anomaly Score (Model-Aware) ────────────────────────────
+        base_risk = self._calculate_base_risk(anomaly_score, model_type, user)
+        if base_risk > 5:
             factors.append(f"Anomaly score {anomaly_score:.3f}")
 
-        # 2. Role Multiplier
-        user = row.get('user', '')
+        # ── 2. Threat-Discriminating Feature Boosts ────────────────────────
+        threat_risk = 0.0
+
+        # File Copy events (STRONGEST signal for data exfiltration)
+        file_copies = row.get('file_copy_count', 0)
+        if file_copies > 0:
+            # Even 1 file copy is unusual; 20 is an exfiltration
+            threat_risk += min(50, file_copies * 3.0)
+            factors.append(f"File copy activity ({int(file_copies)} copies)")
+
+        # Removable media / USB
+        to_removable = row.get('to_removable_count', 0)
+        if to_removable > 0:
+            threat_risk += min(40, to_removable * 2.0)
+            factors.append(f"Removable media transfer ({int(to_removable)} files)")
+
+        usb_events = row.get('usb_events', 0)
+        if usb_events > 0:
+            threat_risk += min(20, usb_events * 10.0)
+            factors.append(f"USB device activity ({int(usb_events)} events)")
+
+        # Confidential files
+        confidential = row.get('confidential_file_count', 0)
+        if confidential > 0:
+            threat_risk += min(40, confidential * 2.5)
+            factors.append(f"Confidential file access ({int(confidential)} files)")
+
+        # ── 3. Role Multiplier ─────────────────────────────────────────────
         role = self.user_roles.get(user, 'Employee')
         role_mult = self.role_multipliers.get(role, 1.0)
         if role_mult > 1.0:
             factors.append(f"{role} role (+{int((role_mult-1)*100)}%)")
 
-        # 3. Time Multiplier
-        hour = row.get('hour', row.get('date', pd.Timestamp.now()))
-        if hasattr(hour, 'hour'):
-            hour = hour.hour
+        # ── 4. After-Hours Multiplier ──────────────────────────────────────
+        oaf = row.get('oaf', 0)
+        after_hours_count = row.get('after_hours_event_count', 0)
+        is_after_hours = oaf > 0.3 or after_hours_count > 3
 
-        is_after_hours = hour < self.work_start or hour > self.work_end
-        time_mult = self.after_hours_mult if is_after_hours else 1.0
+        time_mult = 1.0
         if is_after_hours:
-            factors.append(f"After-hours activity ({hour}:00)")
+            time_mult = self.after_hours_mult
+            factors.append(f"After-hours pattern ({oaf:.0%} of events)")
 
-        # 4. Activity Multiplier (config-driven patterns)
-        activity = str(row.get('activity', ''))
-        activity_mult = 1.0
-        activity_reason = None
+        # ── 5. Calculate Combined Risk ─────────────────────────────────────
+        # Base risk from LSTM anomaly + explicit threat indicators
+        combined_raw = base_risk + threat_risk
 
-        for act_pattern, mult in self.activity_multipliers.items():
-            if act_pattern in activity:
-                activity_mult = max(activity_mult, mult)
-                activity_reason = act_pattern
+        # Apply multipliers
+        final_risk = combined_raw * role_mult * time_mult
 
-        if activity_mult > 1.0:
-            factors.append(f"{activity_reason} (+{int((activity_mult-1)*100)}%)")
+        # ── 6. Heuristic Override: Critical Threat Patterns ────────────────
+        if file_copies > 5 and (usb_events > 0 or to_removable > 5):
+            final_risk = max(final_risk, 90)
+            if "PATTERN: Exfiltration combo" not in factors:
+                factors.append("PATTERN: Exfiltration combo (copies + USB/removable)")
 
-        # 5. Behavioral Feature Boosts
-        behavioral_mult = 1.0
-
-        usb_events = row.get('usb_events_7d', 0)
-        if usb_events > 3:
-            behavioral_mult *= 1.5
-            factors.append(f"USB activity spike ({usb_events} events)")
-
-        copies = row.get('file_copy_count_24h', 0)
-        if copies > 5:
-            behavioral_mult *= 1.3
-            factors.append(f"High file copy volume ({copies} files)")
-
-        ah_ratio = row.get('after_hours_ratio', 0)
-        if ah_ratio > 0.3:
-            behavioral_mult *= 1.2
-            factors.append(f"Elevated after-hours pattern ({ah_ratio:.0%})")
-
-        # 6. Calculate Final Risk
-        final_risk = base_risk * role_mult * time_mult * activity_mult * behavioral_mult
-
-        # Heuristic override for dangerous combinations
-        if "File Copy" in activity and is_after_hours and usb_events > 0:
-            final_risk = max(final_risk, 85)
-            factors.append("PATTERN: File copy + USB + After-hours")
+        if confidential > 5 and to_removable > 5:
+            final_risk = max(final_risk, 95)
+            factors.append("PATTERN: Confidential data exfiltration")
 
         final_risk = min(self.max_risk, final_risk)
 
-        # 7. MITRE Mapping
+        # ── 7. MITRE Mapping ───────────────────────────────────────────────
+        activity = ""
+        if file_copies > 0:
+            activity = "File Copy"
+        elif usb_events > 0:
+            activity = "Connect"
         mitre = self._get_mitre_mapping(activity, is_after_hours)
 
-        # 8. Build Explanation
+        # ── 8. Build Explanation ───────────────────────────────────────────
         primary_factor = factors[0] if factors else "Normal activity"
         text_explanation = self._build_explanation(final_risk, factors, mitre)
 
@@ -233,14 +278,43 @@ class AdvancedRiskScoringEngine:
 
         return final_risk, explanation
 
-    def _calculate_base_risk(self, anomaly_score: float, model_type: str) -> float:
-        """Convert raw anomaly score to base risk (0-100)."""
-        threshold_config = config.thresholds
-
+    def _calculate_base_risk(self, anomaly_score: float, model_type: str, user: str = '') -> float:
+        """
+        Convert raw anomaly score to base risk (0-100) using MODEL-AWARE thresholding.
+        
+        Only scores significantly above the trained P99.5 threshold generate risk.
+        Uses Z-score relative to the model's trained error distribution.
+        """
         if model_type == "lstm":
-            mean = threshold_config.get('lstm_anomaly_mean', 0.16)
-            deviation = max(0, anomaly_score - mean)
-            return min(100, deviation * self.base_multiplier)
+            threshold_meta = self._get_threshold_for_user(user)
+            
+            error_mean = threshold_meta.get('error_mean', 0.6)
+            error_std = threshold_meta.get('error_std', 0.6)
+            trained_threshold = threshold_meta.get('threshold', 3.5)
+            
+            if anomaly_score <= 0:
+                return 0.0
+            
+            # Calculate Z-score relative to trained distribution
+            if error_std > 0:
+                z_score = (anomaly_score - error_mean) / error_std
+            else:
+                z_score = 0.0
+            
+            # Only generate risk if z_score indicates a strong anomaly
+            # Z > 3.0 = notable, Z > 4.0 = strong, Z > 5.0 = extreme
+            if z_score <= 3.0:
+                return 0.0  # Within 3-sigma of normal distribution
+            
+            # Scale: z=3→5, z=4→15, z=5→30, z=6→50, z=7→70
+            base = min(100, max(0, (z_score - 3.0) * 15.0))
+            
+            # Bonus if above the absolute trained threshold (P99.5)
+            if anomaly_score > trained_threshold:
+                above_thresh = (anomaly_score - trained_threshold) / max(trained_threshold, 0.1)
+                base = min(100, base + above_thresh * 25)
+            
+            return base
 
         elif model_type == "baseline":
             if anomaly_score < 0:
@@ -264,13 +338,13 @@ class AdvancedRiskScoringEngine:
 
     def _build_explanation(self, risk: float, factors: List[str], mitre: Dict) -> str:
         """Build human-readable explanation."""
-        if risk < 50:
+        if risk < 30:
             return "Low risk - normal activity pattern."
 
         explanation = f"Risk score {risk:.0f}/100. "
 
         if factors:
-            explanation += "Contributing factors: " + "; ".join(factors[:3]) + ". "
+            explanation += "Contributing factors: " + "; ".join(factors[:4]) + ". "
 
         if mitre:
             explanation += f"Maps to MITRE {mitre.get('tactic', '')} - {mitre.get('tactic_name', '')}."
@@ -321,7 +395,6 @@ class AdvancedRiskScoringEngine:
 
 
 # ── Backward-compatible aliases ──────────────────────────────────────────────
-# These ensure any code importing RiskScoringEngine still works.
 RiskScoringEngine = AdvancedRiskScoringEngine
 
 # Global singleton instances

@@ -38,14 +38,14 @@ function Dashboard() {
                 const chartPoints = topUsers.map(u => ({
                     user: u.user,
                     riskScore: Math.round(u.total_risk_score),
-                    riskLevel: u.risk_level || getRiskLevel(u.total_risk_score)
+                    riskLevel: (u.risk_level && u.risk_level.toLowerCase()) || getRiskLevel(u.total_risk_score)
                 }))
                 setUserRiskData(chartPoints)
 
                 const topAlerts = topUsers.slice(0, 8).map((u, idx) => ({
                     id: idx + 1,
                     user: u.user,
-                    risk: getRiskLevel(u.total_risk_score),
+                    risk: (u.risk_level && u.risk_level.toLowerCase()) || getRiskLevel(u.total_risk_score),
                     action: getRiskAction(u.total_risk_score),
                     score: Math.round(u.total_risk_score),
                     department: u.department || 'General',
@@ -60,7 +60,7 @@ function Dashboard() {
                 const chartPoints = usersData.map(u => ({
                     user: u.user,
                     riskScore: Math.round(u.total_risk_score),
-                    riskLevel: u.risk_level || getRiskLevel(u.total_risk_score)
+                    riskLevel: (u.risk_level && u.risk_level.toLowerCase()) || getRiskLevel(u.total_risk_score)
                 }))
                 setUserRiskData(chartPoints)
             }
@@ -70,27 +70,58 @@ function Dashboard() {
         setLoading(false)
     }
 
-    // Initial load + auto-refresh
+    // Initial load + WebSockets + auto-refresh
     useEffect(() => {
         loadData()
 
+        const wsUrl = (import.meta.env.VITE_API_URL || 'http://localhost:8000').replace(/^http/, 'ws') + '/api/ws/streams';
+        const ws = new WebSocket(wsUrl);
+        
+        ws.onmessage = (event) => {
+            try {
+                const msg = JSON.parse(event.data);
+                if (msg.type === 'biometric_update') {
+                    // Real-time optimistic update of risk scores based on incoming biometric anomalies
+                    setUserRiskData(prev => {
+                        const updated = [...prev];
+                        const idx = updated.findIndex(u => u.user === msg.data.user_id);
+                        if (idx >= 0) {
+                            // Scale the 0-100 anomaly score to the 0-100 risk score scale for visualization
+                            const impliedRisk = msg.data.anomaly_score * 100;
+                            if (impliedRisk > updated[idx].riskScore) {
+                                updated[idx].riskScore = Math.round(impliedRisk);
+                                updated[idx].riskLevel = getRiskLevel(updated[idx].riskScore);
+                            }
+                        }
+                        return updated.sort((a,b) => b.riskScore - a.riskScore);
+                    });
+                }
+            } catch (err) {
+                console.error("Dashboard WS parsing error", err);
+            }
+        };
+
         refreshInterval.current = setInterval(() => loadData(true), REFRESH_SECONDS * 1000)
-        return () => clearInterval(refreshInterval.current)
+        
+        return () => {
+            clearInterval(refreshInterval.current);
+            ws.close();
+        };
     }, [])
 
     const getRiskLevel = (score) => {
-        if (score >= 400) return 'critical'
-        if (score >= 250) return 'high'
-        if (score >= 150) return 'medium'
+        if (score >= 80) return 'critical'
+        if (score >= 50) return 'high'
+        if (score >= 25) return 'medium'
         return 'low'
     }
 
     const getRiskAction = (score) => {
-        if (score >= 500) return 'Multiple High-Risk Activities'
-        if (score >= 400) return 'Anomalous Behavior Pattern'
-        if (score >= 300) return 'Elevated Activity Detected'
-        if (score >= 200) return 'Above-Average Risk Profile'
-        if (score >= 100) return 'Moderate Risk Indicators'
+        if (score >= 90) return 'Multiple High-Risk Activities'
+        if (score >= 80) return 'Anomalous Behavior Pattern'
+        if (score >= 60) return 'Elevated Activity Detected'
+        if (score >= 40) return 'Above-Average Risk Profile'
+        if (score >= 25) return 'Moderate Risk Indicators'
         return 'Normal Activity'
     }
 
@@ -198,9 +229,9 @@ function Dashboard() {
                                             <td>
                                                 <span style={{
                                                     fontWeight: 600,
-                                                    color: alert.score > 400 ? 'var(--risk-critical)' :
-                                                        alert.score > 250 ? 'var(--risk-high)' :
-                                                            alert.score > 150 ? 'var(--risk-medium)' :
+                                                    color: alert.score >= 80 ? 'var(--risk-critical)' :
+                                                        alert.score >= 50 ? 'var(--risk-high)' :
+                                                            alert.score >= 25 ? 'var(--risk-medium)' :
                                                                 'var(--text-secondary)'
                                                 }}>
                                                     {alert.score}

@@ -8,7 +8,7 @@ router = APIRouter()
 
 @router.get("/users/risk", response_model=List[UserRiskProfile])
 def get_risky_users(
-    limit: int = Query(50, ge=1, le=500, description="Maximum number of users to return"),
+    limit: int = Query(500, ge=1, le=1000, description="Maximum number of users to return"),
     sort: str = Query("desc", pattern="^(asc|desc)$", description="Sort direction for risk score"),
 ):
     """

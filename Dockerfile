@@ -20,9 +20,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy project files
 COPY config.yaml .
 COPY src/ ./src/
-COPY data/ ./data/
-COPY models/ ./models/
-COPY tests/ ./tests/
+# Ensure empty data and models directories exist for standalone builds
+# (These are mounted as volumes in docker-compose)
+RUN mkdir -p data models tests
 
 # Expose API port
 EXPOSE 8000
